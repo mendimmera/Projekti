@@ -128,7 +128,7 @@ input[type=number],input[type=text],input[type=email],input[type=password]{width
 <div class="sheet" id="list">
   <h2>Lista e kutive</h2>
   <div id="items"></div>
-  <div class="acts" style="margin-top:12px"><button class="pri" id="lSave">Shkarko listën</button><button id="lClose">Mbyll</button></div>
+  <div class="acts" style="margin-top:12px"><button class="pri" id="lSave">Shkarko PDF</button><button id="lClose">Mbyll</button></div>
 </div>
 
 <div class="sheet" id="imgs">
@@ -169,9 +169,9 @@ var FIREBASE_CONFIG = {
   var NP=function(){return{id:'',name:'',blob:null,marks:[],imgT:0,imgDirty:false}};
   var A={plans:[],act:'',labels:{h:'Nga dyshemeja',l:'Nga muri majtas',r:'Nga muri djathtas'},updated:0},S=NP(),addNew=false,sc=1,tx=0,ty=0,cur=null,moving=null,mem=false,selId=null,infoM=null,mode='view';
   var LBL={celes:'Çelës',prize:'Prizë',tjeter:'Tjetër',tekst:'Tekst'};
-  /* simbolet elektrike: ikonë e bardhë e trashë mbi shenjë me ngjyrë (çelës = rreth portokalli me pllakë çelësi, prizë = rreth blu, tjetër = katror vjollcë) */
+  /* simbolet elektrike: ikonë e bardhë e trashë mbi shenjë me ngjyrë (çelës = rreth portokalli me simbolin klasik: unazë + levë + vizë tërthore, prizë = rreth blu, tjetër = katror vjollcë) */
   var SH={
-    celes:'<rect x="9.5" y="6.5" width="13" height="19" rx="3"/><rect class="f" x="12.8" y="9.8" width="6.4" height="7" rx="1.4"/>',
+    celes:'<circle cx="10" cy="23.5" r="4.2" style="stroke-width:2.8"/><path d="M12 20L21 6.5M17.6 4.6l6.8 4.6" style="stroke-width:2.8"/>',
     prize:'<circle cx="16" cy="16" r="7.5"/><path class="f" d="M8.5 16a7.5 7.5 0 0 1 15 0z"/><path d="M5.5 16h21"/>',
     tekst:'<path d="M9 10h14M16 10v13M12 23h8"/>',
     tjeter:'<path d="M10 10l12 12M22 10L10 22"/>'
@@ -450,14 +450,53 @@ var FIREBASE_CONFIG = {
     if(mode==='view'){if(m.type!=='tekst')openInfo(m)}else openEdit(m,false);
     if(mode==='view'&&m.type==='tekst'){hideSheets();focusMark(m,true)}
   };
+  /* PDF i thjeshtë (pa biblioteka, punon edhe pa internet): tekst Helvetica, A4, disa faqe */
+  function pdfEsc(t){
+    var m={'—':'\x97','–':'\x96','•':'\x95','’':'\x92','“':'\x93','”':'\x94','·':'\xB7'};
+    return t.replace(/[^\x00-\xFF]/g,function(c){return m[c]||'?'}).replace(/([\\()])/g,'\\$1');
+  }
+  function pdfWrap(t,n){
+    var out=[],w=t.split(' '),l='',ind='';
+    w.forEach(function(x){
+      if((l+' '+x).length>n&&l){out.push(l);l='    '+x}else l=l?l+' '+x:x;
+    });
+    if(l)out.push(l);return out;
+  }
+  function mkPdf(title,items){
+    var H=842,M=56,LH=17,per=Math.floor((H-2*M)/LH),rows=[{t:title,b:1},{t:''}];
+    items.forEach(function(it){pdfWrap(it,84).forEach(function(x){rows.push({t:x})})});
+    var pages=[];for(var i=0;i<rows.length;i+=per)pages.push(rows.slice(i,i+per));
+    var objs=[];
+    objs[1]='<</Type/Catalog/Pages 2 0 R>>';
+    var kids=pages.map(function(_,i){return (5+i*2)+' 0 R'}).join(' ');
+    objs[2]='<</Type/Pages/Kids['+kids+']/Count '+pages.length+'>>';
+    objs[3]='<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>';
+    objs[4]='<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold/Encoding/WinAnsiEncoding>>';
+    pages.forEach(function(pg,i){
+      var c='';
+      pg.forEach(function(r,j){
+        if(r.t)c+='BT /'+(r.b?'F2 16':'F1 11')+' Tf 1 0 0 1 '+M+' '+(H-M-j*LH)+' Tm ('+pdfEsc(r.t)+') Tj ET\n';
+      });
+      objs[5+i*2]='<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 3 0 R/F2 4 0 R>>>>/Contents '+(6+i*2)+' 0 R>>';
+      objs[6+i*2]='<</Length '+c.length+'>>\nstream\n'+c+'endstream';
+    });
+    var out='%PDF-1.4\n',off=[];
+    for(var k=1;k<objs.length;k++){off[k]=out.length;out+=k+' 0 obj\n'+objs[k]+'\nendobj\n'}
+    var x=out.length;
+    out+='xref\n0 '+objs.length+'\n0000000000 65535 f \n';
+    for(k=1;k<objs.length;k++)out+=('0000000000'+off[k]).slice(-10)+' 00000 n \n';
+    out+='trailer\n<</Size '+objs.length+'/Root 1 0 R>>\nstartxref\n'+x+'\n%%EOF';
+    var u=new Uint8Array(out.length);for(k=0;k<out.length;k++)u[k]=out.charCodeAt(k)&255;
+    return new Blob([u],{type:'application/pdf'});
+  }
   $('lSave').onclick=function(){
     if(!S.marks.length){alert('Lista është bosh.');return}
-    var t='Lista e kutive — '+(S.name||'Projekti')+'\r\n\r\n'+S.marks.map(function(m){
+    var items=S.marks.map(function(m){
       var d=fmt(m);return (m.type==='tekst'?'•':num(m)+'.')+' '+full(m)+(d?': '+d:'')+(m.note?' ('+m.note+')':'')
-    }).join('\r\n')+'\r\n';
-    var u=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/plain;charset=utf-8'}));
+    });
+    var u=URL.createObjectURL(mkPdf('Lista e kutive — '+(S.name||'Projekti'),items));
     var a=document.createElement('a');a.href=u;
-    a.download='lista-kutive-'+(S.name||'projekti').replace(/[\\\/:*?"<>|\s]+/g,'_')+'.txt';
+    a.download='lista-kutive-'+(S.name||'projekti').replace(/[\\\/:*?"<>|\s]+/g,'_')+'.pdf';
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(function(){URL.revokeObjectURL(u)},4000);
   };
