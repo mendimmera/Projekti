@@ -74,6 +74,9 @@ input[type=number],input[type=text],input[type=email],input[type=password]{width
 .item b{word-break:break-word}
 .mk.tx{width:auto;height:auto;padding:3px 9px;background:#fff;color:#1c1c1a;border:1.5px solid #1c1c1a;border-radius:8px;font:700 15px/1.2 system-ui,sans-serif;white-space:nowrap}
 .mk.tx.sel::before{border-radius:12px}
+body.kb #edit .sh-head,body.kb #edit .seg,body.kb #edit #eLabRow,body.kb #edit #eMove,body.kb #edit #eDel{display:none}
+body.kb .sheet{padding-top:8px;max-height:none}
+body.kb #edit .g3,body.kb #edit .fld{margin-bottom:6px}
 #inst{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:60;max-width:520px;margin:0 auto;display:none;align-items:center;gap:10px;padding:10px 12px;background:var(--surf);border:1px solid var(--bd);border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.3)}
 #inst img{width:44px;height:44px;border-radius:10px;flex:none}
 #inst div{flex:1;font-size:14px;line-height:1.3}
@@ -274,6 +277,7 @@ var FIREBASE_CONFIG = {
     $('eIc').innerHTML=sym(t);
   }
   function hideSheets(){
+    document.body.classList.remove('kb');
     ['edit','info','list','plan','sync','imgs'].forEach(function(i){$(i).style.display='none'});
   }
   function anySheet(){
@@ -295,13 +299,16 @@ var FIREBASE_CONFIG = {
     })(t0);
   }
   /* fokuson simbolin e zgjedhur: e afron, e vendos në qendër të pjesës së dukshme (mbi dritaren e hapur) */
-  function focusMark(m,zoom){
+  var vv=window.visualViewport;
+  function vTop(){return vv?vv.offsetTop:0}
+  function vBot(){return vv?vv.offsetTop+vv.height:window.innerHeight}
+  function focusMark(m,zoom,force){
     if(!img.naturalWidth)return;
     var r=view.getBoundingClientRect(),sh=null,ids=['edit','info'];
     for(var i=0;i<ids.length;i++)if($(ids[i]).style.display==='block')sh=$(ids[i]);
-    var top=r.top+48,bot=Math.min(r.bottom,sh?sh.getBoundingClientRect().top:r.bottom)-24;
+    var top=Math.max(r.top,vTop())+48,bot=Math.min(r.bottom,vBot(),sh?sh.getBoundingClientRect().top:r.bottom)-24;
     var W=img.naturalWidth,H=img.naturalHeight;
-    if(!zoom){
+    if(!zoom&&!force){
       var mx=r.left+tx+m.x*W*sc,my=r.top+ty+m.y*H*sc;
       if(!(mx<r.left+24||mx>r.right-24||my<top||my>bot))return;
     }
@@ -309,6 +316,26 @@ var FIREBASE_CONFIG = {
     var ns=zoom?Math.min(12,Math.max(sc,base*2.5)):sc;
     animTo(r.width/2-m.x*W*ns,(top+bot)/2-r.top-m.y*H*ns,ns,260);
   }
+  /* tastiera: dritarja ngjitet mbi tastierë, bëhet kompakte dhe simboli qendërzohet në pjesën e lirë të projektit */
+  function layoutKb(){
+    var k=vv?Math.max(0,window.innerHeight-vv.offsetTop-vv.height):0,sh=document.querySelectorAll('.sheet');
+    for(var i=0;i<sh.length;i++)sh[i].style.bottom=k>40?k+'px':'0';
+    var m=cur||infoM;if(m&&document.body.classList.contains('kb'))focusMark(m,false,true);
+  }
+  var kt=null;
+  function layoutKbSoon(d){clearTimeout(kt);kt=setTimeout(layoutKb,d||120)}
+  if(vv){vv.addEventListener('resize',function(){layoutKbSoon(120)});vv.addEventListener('scroll',function(){layoutKbSoon(120)})}
+  $('edit').addEventListener('focusin',function(e){
+    if(!/INPUT|TEXTAREA/.test(e.target.tagName))return;
+    document.body.classList.add('kb');layoutKbSoon(60);setTimeout(layoutKb,400);
+  });
+  $('edit').addEventListener('focusout',function(){
+    setTimeout(function(){
+      if($('edit').contains(document.activeElement))return;
+      document.body.classList.remove('kb');layoutKb();
+      var m=cur;if(m)focusMark(m,false);
+    },150);
+  });
   function openEdit(m,isNew){
     if(cur&&cur._new&&cur!==m)S.marks=S.marks.filter(function(x){return x!==cur});
     cur=m;infoM=null;selId=m.id;setType(m.type);curLb=JSON.parse(JSON.stringify(m.lb||{}));paintLabels(curLb);
