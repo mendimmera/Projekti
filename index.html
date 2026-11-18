@@ -142,7 +142,7 @@ body.kb #edit .g3,body.kb #edit .fld{margin-bottom:6px}
 
 <div class="sheet" id="plan">
   <h2>Imazhi aktual</h2>
-  <div class="fld"><label for="pSize" style="font-size:13px">Madhësia e simboleve: <b id="pSizeV">24</b> px</label><input type="range" id="pSize" min="12" max="64" step="1" style="width:100%"></div>
+  <div class="fld"><label for="pSize" style="font-size:13px">Madhësia e simboleve: <b id="pSizeV">12</b> px</label><input type="range" id="pSize" min="4" max="32" step="1" style="width:100%"></div>
   <div class="acts"><button id="pReplace">Ndrysho foton</button><button id="pFit">Përshtat pamjen</button><button id="pSync">Sinkronizim (cloud)</button><button id="pExp">Eksporto kopje</button><button id="pImp">Importo kopje</button><button class="dng" id="pClear">Fshi të gjitha shenjat</button><button id="pClose">Mbyll</button></div>
 </div>
 <input type="file" id="file2" accept=".json,application/json" hidden>
@@ -172,8 +172,8 @@ var FIREBASE_CONFIG = {
   var view=$('view'),stage=$('stage'),img=$('img'),hint=$('hint');
   var NP=function(){return{id:'',name:'',blob:null,marks:[],imgT:0,imgDirty:false}};
   var A={plans:[],act:'',labels:{h:'Nga dyshemeja',l:'Nga muri majtas',r:'Nga muri djathtas'},updated:0},S=NP(),addNew=false,sc=1,tx=0,ty=0,cur=null,moving=null,mem=false,selId=null,infoM=null,mode='view';
-  var MS=24;/* madhësia bazë e simboleve (px) kur projekti është i përshtatur; ndryshohet nga Projekti → rrëshqitësi */
-  try{var q0=+localStorage.getItem('kutiSize');if(q0>=12&&q0<=64)MS=q0}catch(e){}
+  var MS=12;/* madhësia bazë e simboleve (px) kur projekti është i përshtatur; ndryshohet nga Projekti → rrëshqitësi */
+  try{var q0=+localStorage.getItem('kutiSize2');if(q0>=4&&q0<=32)MS=q0}catch(e){}
   var LBL={celes:'Çelës',prize:'Prizë',tjeter:'Tjetër',tekst:'Tekst'};
   /* simbolet elektrike: ikonë e bardhë e trashë mbi shenjë me ngjyrë (çelës = rreth portokalli me simbolin klasik: unazë + levë + vizë tërthore, prizë = rreth blu, tjetër = katror vjollcë) */
   var SH={
@@ -536,7 +536,7 @@ var FIREBASE_CONFIG = {
   $('pSize').value=MS;$('pSizeV').textContent=MS;
   $('pSize').oninput=function(){
     MS=+this.value;$('pSizeV').textContent=MS;apply();
-    try{localStorage.setItem('kutiSize',String(MS))}catch(e){}
+    try{localStorage.setItem('kutiSize2',String(MS))}catch(e){}
   };
   $('bPlan').onclick=function(){hideSheets();$('plan').style.display='block'};
   $('pClose').onclick=hideSheets;
