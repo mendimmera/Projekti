@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Kutitë">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
-:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e07b00;--pri:#1a6ef0;--tj:#8a3ffc;--danger:#d23b3b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e66a00;--pri:#1a6ef0;--tj:#8a3ffc;--danger:#d23b3b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--danger:#ff6b6b}}
 :root[data-theme="dark"]{--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--danger:#ff6b6b}
 *{box-sizing:border-box}
@@ -29,14 +29,17 @@ button.dng{color:var(--danger)}
 #view{flex:1;position:relative;overflow:hidden;touch-action:none;background:var(--bg)}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0;user-select:none;-webkit-user-select:none}
 #stage img{display:block;max-width:none;pointer-events:none;-webkit-user-drag:none}
-.mk{position:absolute;width:28px;height:28px;margin:0;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%) scale(var(--inv,1))}
+.mk{position:absolute;width:36px;height:36px;margin:0;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%) scale(var(--inv,1))}
 .mk .n{position:absolute;right:-9px;bottom:-9px;min-width:16px;height:16px;padding:0 3px;border-radius:8px;background:#1c1c1a;color:#fff;border:1px solid #fff;font:700 10px/14px system-ui,sans-serif;text-align:center}
-.mk.sel::before{content:"";position:absolute;inset:-4px;border:2.5px solid var(--danger);border-radius:50%}
-.t-celes{color:var(--cel)}.t-prize{color:var(--pri)}.t-tjeter{color:var(--tj)}
-.sym{width:100%;height:100%;overflow:visible;display:block}
-.sym .h *{fill:#fff;stroke:#fff;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
-.sym .l *{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.sym .l .f{fill:currentColor}
+.mk.sel{z-index:4;transform:translate(-50%,-50%) scale(calc(var(--inv,1)*1.25))}
+.mk.sel::before{content:"";position:absolute;inset:-8px;border:3px solid var(--danger);border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 18px 5px rgba(210,59,59,.6);animation:pls 1.2s ease-in-out infinite}
+@keyframes pls{50%{transform:scale(1.12);opacity:.7}}
+#stage.foc .mk:not(.sel){opacity:.22}
+.t-celes{color:var(--cel)}.t-prize{color:var(--pri)}.t-tjeter{color:var(--tj)}.t-tekst{color:#555}
+.sym{width:100%;height:100%;overflow:visible;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))}
+.sym .bg *{fill:currentColor;stroke:#fff;stroke-width:2}
+.sym .gl *{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.sym .gl .f{fill:#fff}
 #modes{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;display:none;padding:3px;background:var(--surf);border:1px solid var(--bd);border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 #modes button{border:0;border-radius:999px;padding:6px 16px;font-size:14px;background:transparent}
 #modes button.on{background:var(--acc);color:#fff;font-weight:600}
@@ -46,10 +49,10 @@ button.dng{color:var(--danger)}
 .sheet h2{margin:0 0 8px;font-size:15px}
 .sh-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .sh-head h2{margin:0;flex:1}
-.sh-head .ic{width:24px;height:24px;flex:none}
+.sh-head .ic{width:32px;height:32px;flex:none}
 .seg{display:flex;gap:6px;margin-bottom:8px}
-.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 4px;font-size:14px}
-.seg button .sym{width:20px;height:20px;flex:none}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 4px;font-size:14px;min-width:0}
+.seg button .sym{width:26px;height:26px;flex:none}
 .seg button.on{border:2px solid var(--acc);font-weight:700;padding:5px 3px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
 label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -125,7 +128,7 @@ input[type=number],input[type=text],input[type=email],input[type=password]{width
 <div class="sheet" id="list">
   <h2>Lista e kutive</h2>
   <div id="items"></div>
-  <div class="acts" style="margin-top:12px"><button id="lCopy">Kopjo listën</button><button id="lClose">Mbyll</button></div>
+  <div class="acts" style="margin-top:12px"><button class="pri" id="lSave">Shkarko listën</button><button id="lClose">Mbyll</button></div>
 </div>
 
 <div class="sheet" id="imgs">
@@ -166,14 +169,15 @@ var FIREBASE_CONFIG = {
   var NP=function(){return{id:'',name:'',blob:null,marks:[],imgT:0,imgDirty:false}};
   var A={plans:[],act:'',labels:{h:'Nga dyshemeja',l:'Nga muri majtas',r:'Nga muri djathtas'},updated:0},S=NP(),addNew=false,sc=1,tx=0,ty=0,cur=null,moving=null,mem=false,selId=null,infoM=null,mode='view';
   var LBL={celes:'Çelës',prize:'Prizë',tjeter:'Tjetër',tekst:'Tekst'};
-  /* simbolet elektrike: çelës (rreth + vijë + vizë tërthore), prizë (rreth gjysmë i mbushur + vijë), tjetër (katror me kryq) */
+  /* simbolet elektrike: ikonë e bardhë e trashë mbi shenjë me ngjyrë (çelës = rreth portokalli me pllakë çelësi, prizë = rreth blu, tjetër = katror vjollcë) */
   var SH={
-    celes:'<circle class="f" cx="11" cy="21" r="3.6"/><path d="M11 21L22 10M19 7l6 6"/>',
-    prize:'<circle cx="16" cy="16" r="8"/><path class="f" d="M8 16a8 8 0 0 1 16 0z"/><path d="M5 16h22"/>',
-    tekst:'<path d="M8 9h16M16 9v15M12 24h8"/>',
-    tjeter:'<rect x="7" y="7" width="18" height="18" rx="2"/><path d="M7 7l18 18M25 7L7 25"/>'
+    celes:'<rect x="9.5" y="6.5" width="13" height="19" rx="3"/><rect class="f" x="12.8" y="9.8" width="6.4" height="7" rx="1.4"/>',
+    prize:'<circle cx="16" cy="16" r="7.5"/><path class="f" d="M8.5 16a7.5 7.5 0 0 1 15 0z"/><path d="M5.5 16h21"/>',
+    tekst:'<path d="M9 10h14M16 10v13M12 23h8"/>',
+    tjeter:'<path d="M10 10l12 12M22 10L10 22"/>'
   };
-  function sym(t){return '<svg class="sym t-'+t+'" viewBox="4 4 24 24" aria-hidden="true"><g class="h">'+SH[t]+'</g><g class="l">'+SH[t]+'</g></svg>'}
+  var BG={tjeter:'<rect x="2" y="2" width="28" height="28" rx="7"/>'};
+  function sym(t){return '<svg class="sym t-'+t+'" viewBox="-1 -1 34 34" aria-hidden="true"><g class="bg">'+(BG[t]||'<circle cx="16" cy="16" r="15"/>')+'</g><g class="gl">'+SH[t]+'</g></svg>'}
   function full(m){return LBL[m.type]+((m.type==='tjeter'||m.type==='tekst')&&m.what?': '+m.what:'')}
   function lbl(m,k){return (m.lb&&m.lb[k])||A.labels[k]}
   function num(m){var n=0;for(var i=0;i<S.marks.length;i++){if(S.marks[i].type!=='tekst')n++;if(S.marks[i]===m)break}return n}
@@ -233,6 +237,7 @@ var FIREBASE_CONFIG = {
 
   /* ---------- markers ---------- */
   function render(){
+    stage.classList.toggle('foc',!!selId);
     var old=stage.querySelectorAll('.mk');
     for(var i=0;i<old.length;i++)old[i].remove();
     S.marks.forEach(function(m,i){
@@ -275,16 +280,31 @@ var FIREBASE_CONFIG = {
     if(cur&&cur._new)S.marks=S.marks.filter(function(x){return x!==cur});
     cur=null;infoM=null;selId=null;hideSheets();render();
   }
-  /* sjell kutinë në pjesën e dukshme (mbi dritaren e hapur) */
-  function reveal(m,center){
+  /* animim i qetë i pamjes */
+  var anim=0;
+  function animTo(ntx,nty,nsc,dur){
+    cancelAnimationFrame(anim);
+    var a=tx,b=ty,c=sc,t0=performance.now();
+    (function step(t){
+      var k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);
+      tx=a+(ntx-a)*e;ty=b+(nty-b)*e;sc=c+(nsc-c)*e;apply();
+      if(k<1)anim=requestAnimationFrame(step);
+    })(t0);
+  }
+  /* fokuson simbolin e zgjedhur: e afron, e vendos në qendër të pjesës së dukshme (mbi dritaren e hapur) */
+  function focusMark(m,zoom){
     if(!img.naturalWidth)return;
     var r=view.getBoundingClientRect(),sh=null,ids=['edit','info'];
     for(var i=0;i<ids.length;i++)if($(ids[i]).style.display==='block')sh=$(ids[i]);
     var top=r.top+48,bot=Math.min(r.bottom,sh?sh.getBoundingClientRect().top:r.bottom)-24;
-    var mx=r.left+tx+m.x*img.naturalWidth*sc,my=r.top+ty+m.y*img.naturalHeight*sc;
-    var out=mx<r.left+24||mx>r.right-24||my<top||my>bot;
-    if(!center&&!out)return;
-    tx+=(r.left+r.right)/2-mx;ty+=(top+bot)/2-my;apply();
+    var W=img.naturalWidth,H=img.naturalHeight;
+    if(!zoom){
+      var mx=r.left+tx+m.x*W*sc,my=r.top+ty+m.y*H*sc;
+      if(!(mx<r.left+24||mx>r.right-24||my<top||my>bot))return;
+    }
+    var base=Math.min(r.width/W,r.height/H);
+    var ns=zoom?Math.min(12,Math.max(sc,base*2.5)):sc;
+    animTo(r.width/2-m.x*W*ns,(top+bot)/2-r.top-m.y*H*ns,ns,260);
   }
   function openEdit(m,isNew){
     if(cur&&cur._new&&cur!==m)S.marks=S.marks.filter(function(x){return x!==cur});
@@ -292,7 +312,7 @@ var FIREBASE_CONFIG = {
     $('eTitle').textContent=(m.type==='tekst'?'Tekst':isNew?'Kuti e re':'Kuti nr. '+num(m));
     $('fH').value=m.h;$('fL').value=m.l;$('fR').value=m.r;$('fN').value=m.note||'';$('fW').value=m.what||'';
     $('eDel').style.display=isNew?'none':'';$('eMove').style.display=isNew?'none':'';
-    hideSheets();$('edit').style.display='block';render();reveal(m,false);
+    hideSheets();$('edit').style.display='block';render();focusMark(m,!isNew);
   }
   function openInfo(m){
     cur=null;infoM=m;selId=m.id;
@@ -301,7 +321,7 @@ var FIREBASE_CONFIG = {
     var v=function(x){return (x!==''&&x!=null)?'<b>'+esc(x)+' <i>cm</i></b>':'<b>—</b>'};
     $('iVals').innerHTML='<div><small>'+esc(lbl(m,'h'))+'</small>'+v(m.h)+'</div><div><small>'+esc(lbl(m,'l'))+'</small>'+v(m.l)+'</div><div><small>'+esc(lbl(m,'r'))+'</small>'+v(m.r)+'</div>';
     $('iNote').textContent=m.note||'';$('iNote').style.display=m.note?'':'none';
-    hideSheets();$('info').style.display='block';render();reveal(m,false);
+    hideSheets();$('info').style.display='block';render();focusMark(m,true);
   }
   $('types').onclick=function(e){
     var b=e.target.closest&&e.target.closest('button'),t=b&&b.dataset.t;
@@ -357,6 +377,7 @@ var FIREBASE_CONFIG = {
   var ptrs=new Map(),moved=0,t0=0,startTarget=null,last=null;
   view.addEventListener('pointerdown',function(e){
     if(!S.blob)return;
+    cancelAnimationFrame(anim);
     view.setPointerCapture&&view.setPointerCapture(e.pointerId);
     ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(ptrs.size===1){moved=0;t0=Date.now();startTarget=e.target}
@@ -391,7 +412,7 @@ var FIREBASE_CONFIG = {
     var ns=Math.min(12,Math.max(0.1,sc*f));f=ns/sc;
     tx=px-(px-tx)*f;ty=py-(py-ty)*f;sc=ns;
   }
-  view.addEventListener('wheel',function(e){e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.15:1/1.15);apply()},{passive:false});
+  view.addEventListener('wheel',function(e){e.preventDefault();cancelAnimationFrame(anim);zoomAt(e.clientX,e.clientY,e.deltaY<0?1.15:1/1.15);apply()},{passive:false});
 
   function tap(e,target){
     var mk=target&&target.closest&&target.closest('.mk');
@@ -427,11 +448,18 @@ var FIREBASE_CONFIG = {
   $('items').onclick=function(e){
     var it=e.target.closest('.item'),m=it&&S.marks[+it.dataset.i];if(!m)return;
     if(mode==='view'){if(m.type!=='tekst')openInfo(m)}else openEdit(m,false);
-    reveal(m,true);
+    if(mode==='view'&&m.type==='tekst'){hideSheets();focusMark(m,true)}
   };
-  $('lCopy').onclick=function(){
-    var t=S.marks.map(function(m,i){return (m.type==='tekst'?'•':num(m)+'.')+' '+full(m)+': '+fmt(m)+(m.note?' ('+m.note+')':'')}).join('\n');
-    try{navigator.clipboard.writeText(t).then(function(){alert('U kopjua.')},function(){alert(t)})}catch(e){alert(t)}
+  $('lSave').onclick=function(){
+    if(!S.marks.length){alert('Lista është bosh.');return}
+    var t='Lista e kutive — '+(S.name||'Projekti')+'\r\n\r\n'+S.marks.map(function(m){
+      var d=fmt(m);return (m.type==='tekst'?'•':num(m)+'.')+' '+full(m)+(d?': '+d:'')+(m.note?' ('+m.note+')':'')
+    }).join('\r\n')+'\r\n';
+    var u=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/plain;charset=utf-8'}));
+    var a=document.createElement('a');a.href=u;
+    a.download='lista-kutive-'+(S.name||'projekti').replace(/[\\\/:*?"<>|\s]+/g,'_')+'.txt';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},4000);
   };
   $('bPlan').onclick=function(){hideSheets();$('plan').style.display='block'};
   $('pClose').onclick=hideSheets;
