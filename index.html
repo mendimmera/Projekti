@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kutitë elektrike</title>
 <style>
-:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#f5b400;--pri:#1a6ef0;--tj:#8a3ffc;--danger:#d23b3b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e07b00;--pri:#1a6ef0;--tj:#8a3ffc;--danger:#d23b3b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--danger:#ff6b6b}}
 :root[data-theme="dark"]{--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--danger:#ff6b6b}
 *{box-sizing:border-box}
@@ -21,22 +21,42 @@ button.dng{color:var(--danger)}
 #view{flex:1;position:relative;overflow:hidden;touch-action:none;background:var(--bg)}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0;user-select:none;-webkit-user-select:none}
 #stage img{display:block;max-width:none;pointer-events:none;-webkit-user-drag:none}
-.mk{position:absolute;width:28px;height:28px;margin:0;border-radius:50%;border:2px solid #fff;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%) scale(var(--inv,1));box-shadow:0 1px 4px rgba(0,0,0,.5)}
-.mk.sel{outline:3px solid var(--danger)}
-.t-celes{background:var(--cel);color:#222}.t-prize{background:var(--pri)}.t-tjeter{background:var(--tj)}
+.mk{position:absolute;width:28px;height:28px;margin:0;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%) scale(var(--inv,1))}
+.mk .n{position:absolute;right:-9px;bottom:-9px;min-width:16px;height:16px;padding:0 3px;border-radius:8px;background:#1c1c1a;color:#fff;border:1px solid #fff;font:700 10px/14px system-ui,sans-serif;text-align:center}
+.mk.sel::before{content:"";position:absolute;inset:-4px;border:2.5px solid var(--danger);border-radius:50%}
+.t-celes{color:var(--cel)}.t-prize{color:var(--pri)}.t-tjeter{color:var(--tj)}
+.sym{width:100%;height:100%;overflow:visible;display:block}
+.sym .h *{fill:#fff;stroke:#fff;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
+.sym .l *{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.sym .l .f{fill:currentColor}
+#modes{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;display:none;padding:3px;background:var(--surf);border:1px solid var(--bd);border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#modes button{border:0;border-radius:999px;padding:6px 16px;font-size:14px;background:transparent}
+#modes button.on{background:var(--acc);color:#fff;font-weight:600}
 #empty{position:absolute;inset:0;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--mut)}
-#hint{position:absolute;left:8px;right:8px;bottom:8px;background:var(--acc);color:#fff;padding:8px 12px;border-radius:10px;text-align:center;display:none}
-.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--surf);border-top:1px solid var(--bd);border-radius:16px 16px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:85%;overflow:auto;display:none;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
-.sheet h2{margin:0 0 10px;font-size:17px}
-.seg{display:flex;gap:6px;margin-bottom:10px}
-.seg button{flex:1;padding:10px 4px}
-.seg button.on{border:2px solid var(--acc);font-weight:700}
-.row{display:flex;gap:8px;margin-bottom:10px}
-label{display:block;font-size:13px;color:var(--mut);margin-bottom:3px}
-input[type=number],input[type=text]{width:100%;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
-.acts{display:flex;gap:8px;flex-wrap:wrap}.acts button{flex:1;min-width:80px}
-.item{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}
-.item .mk{position:static;transform:none;flex:none}
+#hint{pointer-events:none;position:absolute;left:8px;right:8px;bottom:8px;background:var(--acc);color:#fff;padding:8px 12px;border-radius:10px;text-align:center;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--surf);border:1px solid var(--bd);border-bottom:0;border-radius:14px 14px 0 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));max-height:80%;overflow:auto;display:none;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
+.sheet h2{margin:0 0 8px;font-size:15px}
+.sh-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sh-head h2{margin:0;flex:1}
+.sh-head .ic{width:24px;height:24px;flex:none}
+.seg{display:flex;gap:6px;margin-bottom:8px}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 4px;font-size:14px}
+.seg button .sym{width:20px;height:20px;flex:none}
+.seg button.on{border:2px solid var(--acc);font-weight:700;padding:5px 3px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+input[type=number],input[type=text]{width:100%;font:inherit;font-size:16px;padding:7px 8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
+.u{position:relative}.u input{padding-right:28px}
+.u span{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--mut);pointer-events:none}
+.fld{margin-bottom:8px}
+.acts{display:flex;gap:6px;flex-wrap:wrap}.acts button{flex:1;min-width:70px;padding:7px 8px;font-size:14px}
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.vals>div{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:6px 8px;min-width:0}
+.vals small{display:block;font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vals b{font-size:20px;font-weight:700}.vals b i{font-size:12px;font-weight:400;font-style:normal;color:var(--mut)}
+.inote{font-size:14px;margin:0 0 8px}
+.item{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd);cursor:pointer}
+.item .mk{position:static;transform:none;flex:none;margin-right:6px}
 .item small{color:var(--mut);display:block}
 </style>
 </head>
@@ -50,30 +70,35 @@ input[type=number],input[type=text]{width:100%;font:inherit;padding:10px;border:
   <div id="view">
     <div id="stage"><img id="img" alt="Projekti"></div>
     <div id="empty"><div>Ngarko foton ose screenshot-in e projektit (planimetrisë) për të filluar.</div><button class="pri" id="bLoad">Zgjidh projektin</button></div>
+    <div id="modes"><button data-m="view">Shiko</button><button data-m="edit">Ndrysho</button></div>
     <div id="hint"></div>
   </div>
 </div>
 <input type="file" id="file" accept="image/*" hidden>
 
 <div class="sheet" id="edit">
-  <h2 id="eTitle">Kuti e re</h2>
-  <div class="seg" id="types">
-    <button data-t="celes">Çelës</button><button data-t="prize">Prizë</button><button data-t="tjeter">Tjetër</button>
+  <div class="sh-head"><div class="ic" id="eIc"></div><h2 id="eTitle">Kuti e re</h2></div>
+  <div class="seg" id="types"></div>
+  <div class="g3">
+    <div><label>Nga dyshemeja</label><div class="u"><input type="number" id="fH" inputmode="decimal"><span>cm</span></div></div>
+    <div><label>Nga muri majtas</label><div class="u"><input type="number" id="fL" inputmode="decimal"><span>cm</span></div></div>
+    <div><label>Nga muri djathtas</label><div class="u"><input type="number" id="fR" inputmode="decimal"><span>cm</span></div></div>
   </div>
-  <div class="row">
-    <div style="flex:1"><label>Lartësia nga dyshemeja (cm)</label><input type="number" id="fH" inputmode="decimal"></div>
-  </div>
-  <div class="row">
-    <div style="flex:1"><label>Nga muri majtas (cm)</label><input type="number" id="fL" inputmode="decimal"></div>
-    <div style="flex:1"><label>Nga muri djathtas (cm)</label><input type="number" id="fR" inputmode="decimal"></div>
-  </div>
-  <div style="margin-bottom:10px"><label>Shënim (p.sh. çelës i dhomës së gjumit)</label><input type="text" id="fN"></div>
+  <div class="fld" id="wRow"><input type="text" id="fW" placeholder="Çfarë është? p.sh. kuti shpërndarjeje, TV, ventilator"></div>
+  <div class="fld"><input type="text" id="fN" placeholder="Shënim (opsionale)"></div>
   <div class="acts">
     <button class="pri" id="eSave">Ruaj</button>
     <button id="eMove">Zhvendos</button>
     <button class="dng" id="eDel">Fshi</button>
     <button id="eCancel">Mbyll</button>
   </div>
+</div>
+
+<div class="sheet" id="info">
+  <div class="sh-head"><div class="ic" id="iIc"></div><h2 id="iTitle"></h2></div>
+  <div class="vals" id="iVals"></div>
+  <p class="inote" id="iNote"></p>
+  <div class="acts"><button id="iEdit">Ndrysho</button><button id="iClose">Mbyll</button></div>
 </div>
 
 <div class="sheet" id="list">
@@ -109,8 +134,16 @@ var FIREBASE_CONFIG = {
 (function(){
   var $=function(i){return document.getElementById(i)};
   var view=$('view'),stage=$('stage'),img=$('img'),hint=$('hint');
-  var S={blob:null,marks:[],updated:0,imgT:0,imgDirty:false},sc=1,tx=0,ty=0,cur=null,moving=null,mem=false;
+  var S={blob:null,marks:[],updated:0,imgT:0,imgDirty:false},sc=1,tx=0,ty=0,cur=null,moving=null,mem=false,selId=null,infoM=null,mode='view';
   var LBL={celes:'Çelës',prize:'Prizë',tjeter:'Tjetër'};
+  /* simbolet elektrike: çelës (rreth + vijë + vizë tërthore), prizë (rreth gjysmë i mbushur + vijë), tjetër (katror me kryq) */
+  var SH={
+    celes:'<circle class="f" cx="11" cy="21" r="3.6"/><path d="M11 21L22 10M19 7l6 6"/>',
+    prize:'<circle cx="16" cy="16" r="8"/><path class="f" d="M8 16a8 8 0 0 1 16 0z"/><path d="M5 16h22"/>',
+    tjeter:'<rect x="7" y="7" width="18" height="18" rx="2"/><path d="M7 7l18 18M25 7L7 25"/>'
+  };
+  function sym(t){return '<svg class="sym t-'+t+'" viewBox="4 4 24 24" aria-hidden="true"><g class="h">'+SH[t]+'</g><g class="l">'+SH[t]+'</g></svg>'}
+  function full(m){return LBL[m.type]+(m.type==='tjeter'&&m.what?': '+m.what:'')}
 
   /* ---------- storage (IndexedDB, with in-memory fallback) ---------- */
   var db=null;
@@ -148,6 +181,7 @@ var FIREBASE_CONFIG = {
     tx=(vw-img.naturalWidth*sc)/2;ty=(vh-img.naturalHeight*sc)/2;apply();
   }
   function showImg(){
+    $('modes').style.display=S.blob?'flex':'none';
     if(!S.blob){$('empty').style.display='flex';stage.style.display='none';return}
     $('empty').style.display='none';stage.style.display='block';
     img.onload=function(){fit();render()};
@@ -160,8 +194,8 @@ var FIREBASE_CONFIG = {
     for(var i=0;i<old.length;i++)old[i].remove();
     S.marks.forEach(function(m,i){
       var d=document.createElement('div');
-      d.className='mk t-'+m.type+(cur&&cur.id===m.id?' sel':'');
-      d.textContent=i+1;d.dataset.id=m.id;
+      d.className='mk t-'+m.type+(selId===m.id?' sel':'');
+      d.innerHTML=sym(m.type)+'<span class="n">'+(i+1)+'</span>';d.dataset.id=m.id;
       d.style.left=(m.x*100)+'%';d.style.top=(m.y*100)+'%';
       stage.appendChild(d);
     });
@@ -177,41 +211,93 @@ var FIREBASE_CONFIG = {
 
   /* ---------- edit sheet ---------- */
   var curType='celes';
+  $('types').innerHTML=['celes','prize','tjeter'].map(function(t){return '<button data-t="'+t+'">'+sym(t)+LBL[t]+'</button>'}).join('');
   function setType(t){
     curType=t;
     var b=$('types').children;
     for(var i=0;i<b.length;i++)b[i].classList.toggle('on',b[i].dataset.t===t);
-  }
-  function openEdit(m,isNew){
-    cur=m;setType(m.type);
-    $('eTitle').textContent=(isNew?'Kuti e re':'Kuti nr. '+(S.marks.indexOf(m)+1));
-    $('fH').value=m.h;$('fL').value=m.l;$('fR').value=m.r;$('fN').value=m.note||'';
-    $('eDel').style.display=isNew?'none':'';$('eMove').style.display=isNew?'none':'';
-    hideSheets();$('edit').style.display='block';render();
+    $('wRow').style.display=t==='tjeter'?'':'none';
+    $('eIc').innerHTML=sym(t);
   }
   function hideSheets(){
-    ['edit','list','plan','sync'].forEach(function(i){$(i).style.display='none'});
+    ['edit','info','list','plan','sync'].forEach(function(i){$(i).style.display='none'});
   }
-  function closeEdit(){
-    if(cur&&cur._new){S.marks=S.marks.filter(function(x){return x!==cur})}
-    cur=null;hideSheets();render();
+  function anySheet(){
+    return ['edit','info','list','plan','sync'].some(function(i){return $(i).style.display==='block'});
   }
-  $('types').onclick=function(e){var t=e.target.dataset&&e.target.dataset.t;if(t)setType(t)};
+  function closeAll(){
+    if(cur&&cur._new)S.marks=S.marks.filter(function(x){return x!==cur});
+    cur=null;infoM=null;selId=null;hideSheets();render();
+  }
+  /* sjell kutinë në pjesën e dukshme (mbi dritaren e hapur) */
+  function reveal(m,center){
+    if(!img.naturalWidth)return;
+    var r=view.getBoundingClientRect(),sh=null,ids=['edit','info'];
+    for(var i=0;i<ids.length;i++)if($(ids[i]).style.display==='block')sh=$(ids[i]);
+    var top=r.top+48,bot=Math.min(r.bottom,sh?sh.getBoundingClientRect().top:r.bottom)-24;
+    var mx=r.left+tx+m.x*img.naturalWidth*sc,my=r.top+ty+m.y*img.naturalHeight*sc;
+    var out=mx<r.left+24||mx>r.right-24||my<top||my>bot;
+    if(!center&&!out)return;
+    tx+=(r.left+r.right)/2-mx;ty+=(top+bot)/2-my;apply();
+  }
+  function openEdit(m,isNew){
+    if(cur&&cur._new&&cur!==m)S.marks=S.marks.filter(function(x){return x!==cur});
+    cur=m;infoM=null;selId=m.id;setType(m.type);
+    $('eTitle').textContent=(isNew?'Kuti e re':'Kuti nr. '+(S.marks.indexOf(m)+1));
+    $('fH').value=m.h;$('fL').value=m.l;$('fR').value=m.r;$('fN').value=m.note||'';$('fW').value=m.what||'';
+    $('eDel').style.display=isNew?'none':'';$('eMove').style.display=isNew?'none':'';
+    hideSheets();$('edit').style.display='block';render();reveal(m,false);
+  }
+  function openInfo(m){
+    cur=null;infoM=m;selId=m.id;
+    $('iIc').innerHTML=sym(m.type);
+    $('iTitle').textContent='Nr. '+(S.marks.indexOf(m)+1)+' · '+full(m);
+    var v=function(x){return (x!==''&&x!=null)?'<b>'+esc(x)+' <i>cm</i></b>':'<b>—</b>'};
+    $('iVals').innerHTML='<div><small>Nga dyshemeja</small>'+v(m.h)+'</div><div><small>Nga muri majtas</small>'+v(m.l)+'</div><div><small>Nga muri djathtas</small>'+v(m.r)+'</div>';
+    $('iNote').textContent=m.note||'';$('iNote').style.display=m.note?'':'none';
+    hideSheets();$('info').style.display='block';render();reveal(m,false);
+  }
+  $('types').onclick=function(e){
+    var b=e.target.closest&&e.target.closest('button'),t=b&&b.dataset.t;
+    if(t){setType(t);if(t==='tjeter')$('fW').focus()}
+  };
   $('eSave').onclick=function(){
     if(!cur)return;
     cur.type=curType;cur.h=$('fH').value;cur.l=$('fL').value;cur.r=$('fR').value;cur.note=$('fN').value;
-    delete cur._new;cur=null;hideSheets();render();save();
+    cur.what=curType==='tjeter'?$('fW').value.trim():'';
+    delete cur._new;cur=null;selId=null;hideSheets();render();save();
   };
-  $('eCancel').onclick=closeEdit;
+  $('eCancel').onclick=closeAll;
+  $('iClose').onclick=closeAll;
+  $('iEdit').onclick=function(){if(infoM)openEdit(infoM,false)};
   $('eDel').onclick=function(){
     if(!cur||!confirm('Ta fshij këtë kuti?'))return;
     S.marks=S.marks.filter(function(x){return x!==cur});
-    cur=null;hideSheets();render();save();
+    cur=null;selId=null;hideSheets();render();save();
   };
   $('eMove').onclick=function(){
     moving=cur;hideSheets();
     hint.textContent='Prek vendin e ri në projekt';hint.style.display='block';
   };
+
+  /* ---------- modes: Shiko / Ndrysho ---------- */
+  function paintModes(){
+    var b=$('modes').children;
+    for(var i=0;i<b.length;i++)b[i].classList.toggle('on',b[i].dataset.m===mode);
+  }
+  function setMode(m){
+    mode=m;paintModes();
+    try{localStorage.setItem('kutiMode',m)}catch(e){}
+    moving=null;hint.style.display='none';closeAll();
+  }
+  var ft=null;
+  function flash(t){
+    if(moving)return;
+    hint.textContent=t;hint.style.display='block';clearTimeout(ft);
+    ft=setTimeout(function(){if(!moving)hint.style.display='none'},2200);
+  }
+  $('modes').addEventListener('pointerdown',function(e){e.stopPropagation()});
+  $('modes').onclick=function(e){var b=e.target.closest('button');if(b&&b.dataset.m!==mode)setMode(b.dataset.m)};
 
   /* ---------- gestures ---------- */
   var ptrs=new Map(),moved=0,t0=0,startTarget=null,last=null;
@@ -257,9 +343,10 @@ var FIREBASE_CONFIG = {
     var mk=target&&target.closest&&target.closest('.mk');
     if(!moving&&mk){
       var m=S.marks.filter(function(x){return x.id===mk.dataset.id})[0];
-      if(m)openEdit(m,false);return;
+      if(m){if(mode==='view')openInfo(m);else openEdit(m,false)}
+      return;
     }
-    if($('edit').style.display==='block'||$('list').style.display==='block'||$('plan').style.display==='block'||$('sync').style.display==='block'){hideSheets();if(cur&&cur._new)closeEdit();cur=null;render();return}
+    if(anySheet()){closeAll();return}
     var r=stage.getBoundingClientRect();
     var x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
     if(x<0||x>1||y<0||y>1)return;
@@ -267,7 +354,8 @@ var FIREBASE_CONFIG = {
       moving.x=x;moving.y=y;var m2=moving;moving=null;hint.style.display='none';
       save();openEdit(m2,false);return;
     }
-    var nm={id:'m'+Date.now(),x:x,y:y,type:curType,h:'',l:'',r:'',note:'',_new:true};
+    if(mode!=='edit'){flash('Për të shtuar kuti, kalo te “Ndrysho”.');return}
+    var nm={id:'m'+Date.now(),x:x,y:y,type:curType,h:'',l:'',r:'',note:'',what:'',_new:true};
     S.marks.push(nm);openEdit(nm,true);
   }
 
@@ -276,14 +364,19 @@ var FIREBASE_CONFIG = {
     var h='';
     if(!S.marks.length)h='<p style="color:var(--mut)">Ende s’ka kuti të shënuara.</p>';
     S.marks.forEach(function(m,i){
-      h+='<div class="item"><div class="mk t-'+m.type+'">'+(i+1)+'</div><div><b>'+LBL[m.type]+'</b><small>'+(fmt(m)||'pa përmasa')+(m.note?' — '+esc(m.note):'')+'</small></div></div>';
+      h+='<div class="item" data-i="'+i+'"><div class="mk t-'+m.type+'">'+sym(m.type)+'<span class="n">'+(i+1)+'</span></div><div><b>'+esc(full(m))+'</b><small>'+(fmt(m)||'pa përmasa')+(m.note?' — '+esc(m.note):'')+'</small></div></div>';
     });
     $('items').innerHTML=h;hideSheets();$('list').style.display='block';
   };
   function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
   $('lClose').onclick=hideSheets;
+  $('items').onclick=function(e){
+    var it=e.target.closest('.item'),m=it&&S.marks[+it.dataset.i];if(!m)return;
+    if(mode==='view')openInfo(m);else openEdit(m,false);
+    reveal(m,true);
+  };
   $('lCopy').onclick=function(){
-    var t=S.marks.map(function(m,i){return (i+1)+'. '+LBL[m.type]+': '+fmt(m)+(m.note?' ('+m.note+')':'')}).join('\n');
+    var t=S.marks.map(function(m,i){return (i+1)+'. '+full(m)+': '+fmt(m)+(m.note?' ('+m.note+')':'')}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){alert('U kopjua.')},function(){alert(t)})}catch(e){alert(t)}
   };
   $('bPlan').onclick=function(){hideSheets();$('plan').style.display='block'};
@@ -433,6 +526,8 @@ var FIREBASE_CONFIG = {
     r.readAsText(f);
   };
 
+  try{mode=localStorage.getItem('kutiMode')==='edit'?'edit':'view'}catch(e){}
+  paintModes();
   updUser();
   openDB(function(){load(function(){showImg();if(cfgOk())initFb()})});
 })();
