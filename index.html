@@ -219,7 +219,10 @@ var FIREBASE_CONFIG = {
   /* ---------- view transform ---------- */
   function apply(){
     stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+sc+')';
-    stage.style.setProperty('--inv',String(1/sc));
+    /* simbolet mbeten të njëjta kur afrohet, por zvogëlohen kur projekti largohet (minimumi 40%) */
+    var f=1;
+    if(img.naturalWidth){var b=Math.min(view.clientWidth/img.naturalWidth,view.clientHeight/img.naturalHeight);f=Math.max(.4,Math.min(1,sc/(b*2)))}
+    stage.style.setProperty('--inv',String(f/sc));
   }
   function fit(){
     if(!img.naturalWidth)return;
