@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Elektrike">
+<meta name="apple-mobile-web-app-title" content="Kutitë">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e07b00;--pri:#1a6ef0;--tj:#8a3ffc;--danger:#d23b3b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -53,7 +53,7 @@ button.dng{color:var(--danger)}
 .seg button.on{border:2px solid var(--acc);font-weight:700;padding:5px 3px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
 label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-input[type=number],input[type=text]{width:100%;font:inherit;font-size:16px;padding:7px 8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
+input[type=number],input[type=text],input[type=email],input[type=password]{width:100%;font:inherit;font-size:16px;padding:7px 8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
 .u{position:relative}.u input{padding-right:28px}
 .u span{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--mut);pointer-events:none}
 .fld{margin-bottom:8px}
@@ -142,7 +142,9 @@ input[type=number],input[type=text]{width:100%;font:inherit;font-size:16px;paddi
 <div class="sheet" id="sync">
   <h2>Sinkronizim (Firebase)</h2>
   <p class="note" id="uTxt"></p>
-  <div class="acts"><button class="pri" id="cIn">Hyr me Google</button><button id="cOut">Dil</button><button id="cPull">Shkarko nga cloud</button><button id="cClose">Mbyll</button></div>
+  <div id="uF"><div class="fld"><input type="email" id="uE" placeholder="Email" autocomplete="email" autocapitalize="off" inputmode="email"></div>
+  <div class="fld"><input type="password" id="uP" placeholder="Fjalëkalimi (min. 6 shkronja)" autocomplete="current-password"></div></div>
+  <div class="acts"><button class="pri" id="cIn">Hyr</button><button id="cReg">Krijo llogari</button><button id="cRes">Harrova fjalëkalimin</button><button id="cOut">Dil</button><button id="cPull">Shkarko nga cloud</button><button id="cClose">Mbyll</button></div>
 </div>
 
 <script>
@@ -492,8 +494,8 @@ var FIREBASE_CONFIG = {
   function setSt(t){$('st').textContent=t}
   function loadJs(u){return new Promise(function(res,rej){var e=document.createElement('script');e.src=u;e.onload=res;e.onerror=rej;document.head.appendChild(e)})}
   function updUser(){
-    $('uTxt').textContent=!cfgOk()?'Firebase nuk është konfiguruar në skedar (shih udhëzimet).':(user?'Hyrë si '+(user.email||'përdorues'):'Nuk ke hyrë. Hyr me Google për të sinkronizuar.');
-    $('cIn').style.display=(cfgOk()&&!user)?'':'none';
+    $('uTxt').textContent=!cfgOk()?'Firebase nuk është konfiguruar në skedar (shih udhëzimet).':(user?'Hyrë si '+(user.email||'përdorues'):'Nuk ke hyrë. Hyr me email e fjalëkalim, ose krijo llogari të re, për të sinkronizuar.');
+    var nf=(cfgOk()&&!user)?'':'none';['cIn','cReg','cRes','uF'].forEach(function(i){$(i).style.display=nf});
     $('cOut').style.display=user?'':'none';
     $('cPull').style.display=user?'':'none';
   }
@@ -582,16 +584,26 @@ var FIREBASE_CONFIG = {
   }
   $('pSync').onclick=function(){updUser();hideSheets();$('sync').style.display='block'};
   $('cClose').onclick=hideSheets;
-  $('cIn').onclick=function(){
+  function authMsg(x){
+    var m={'auth/invalid-email':'Email-i nuk është i vlefshëm.','auth/invalid-credential':'Email ose fjalëkalim i gabuar.','auth/wrong-password':'Fjalëkalim i gabuar.','auth/user-not-found':'Nuk ekziston llogari me këtë email.','auth/email-already-in-use':'Ky email ka tashmë llogari. Shtyp “Hyr”.','auth/weak-password':'Fjalëkalimi duhet të ketë të paktën 6 shkronja.','auth/too-many-requests':'Shumë përpjekje. Provo pak më vonë.','auth/network-request-failed':'Nuk ka lidhje me internetin.','auth/operation-not-allowed':'Hyrja me email nuk është aktivizuar në Firebase (Authentication → Sign-in method → Email/Password).','auth/missing-password':'Shkruaj fjalëkalimin.'};
+    return m[x&&x.code]||('Gabim: '+(x&&x.code?x.code:x));
+  }
+  function authGo(kind){
+    var e=$('uE').value.trim(),p=$('uP').value;
+    if(!e||(!p&&kind!=='res')){alert('Shkruaj email-in'+(kind==='res'?'.':' dhe fjalëkalimin.'));return}
     var go=function(){
-      var pr=new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(pr).then(function(){hideSheets()}).catch(function(e){
-        if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))firebase.auth().signInWithRedirect(pr);
-        else alert('Hyrja dështoi: '+(e&&e.code?e.code:e));
-      });
+      if(!window.firebase){alert('Nuk ka lidhje me internetin.');return}
+      var a=firebase.auth(),pr=kind==='reg'?a.createUserWithEmailAndPassword(e,p):kind==='res'?a.sendPasswordResetEmail(e):a.signInWithEmailAndPassword(e,p);
+      pr.then(function(){
+        $('uP').value='';
+        if(kind==='res')alert('Të dërgova lidhjen për fjalëkalim të ri në email (shiko edhe te Spam).');else hideSheets();
+      }).catch(function(x){alert(authMsg(x))});
     };
     if(window.firebase&&firebase.apps&&firebase.apps.length)go();else initFb().then(go);
-  };
+  }
+  $('cIn').onclick=function(){authGo('in')};
+  $('cReg').onclick=function(){authGo('reg')};
+  $('cRes').onclick=function(){authGo('res')};
   $('cOut').onclick=function(){firebase.auth().signOut()};
   $('cPull').onclick=function(){
     if(confirm('Të zëvendësoj të dhënat në këtë pajisje me ato nga cloud?')){hideSheets();pull(true)}
