@@ -25,7 +25,9 @@ button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
 .bar h1{flex:1;margin:0;font-size:16px}
 .bar a.back{text-decoration:none;color:var(--text);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;font-size:18px;line-height:1.2}
 .bar button{padding:6px 12px;font-size:18px;line-height:1.2}
-.chips{padding:0 8px 6px}
+.chips{display:flex;gap:6px;padding:0 8px 6px}
+.chips select{flex:1;min-width:0;border-width:2px;border-color:var(--bd)}
+.chips select.act{border-color:var(--acc);color:var(--acc)}
 select{width:100%;font:inherit;font-size:16px;font-weight:600;padding:5px 8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
 .mrow{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bd)}.mrow span{flex:1;min-width:0;font-size:15px}.mrow.off span{color:var(--mut);text-decoration:line-through}
 .sheet .mrow button{display:inline-block;width:auto;margin:0;padding:6px 10px;font-size:13px}
@@ -72,6 +74,7 @@ input.vi{width:46px;font:inherit;font-size:16px;font-weight:600;text-align:cente
 
 button.addm{display:block;width:100%;margin-top:6px;padding:5px;border-style:dashed;color:var(--acc);font-size:14px}
 .tile .dx{flex:none;width:22px;height:22px;padding:0;border-radius:50%;font-size:13px;line-height:1;color:var(--mut);border:0;background:transparent}
+.pact{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 8px}.pact button{flex:1;font-size:14px;padding:8px 6px}
 .ph{display:flex;align-items:center;gap:8px;margin:14px 0 4px}
 .ph h2{flex:1;margin:0;font-size:17px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .ph button{padding:4px 10px;font-size:14px;font-weight:600;color:var(--acc)}
@@ -101,7 +104,7 @@ button.addm{display:block;width:100%;margin-top:6px;padding:5px;border-style:das
     <h1>Materialet <small id="st" style="font-weight:400;color:var(--mut);font-size:12px"></small></h1>
     <button id="bMenu" aria-label="Menyja">⋯</button>
   </div>
-  <div class="chips"><select id="selP" aria-label="Personi"></select></div>
+  <div class="chips"><select id="selP" aria-label="Personat"></select><select id="selT" aria-label="Totalet"></select></div>
 </div>
 <main id="main"></main>
 
@@ -231,9 +234,14 @@ var FIREBASE_CONFIG = {
 
   /* ---------- vizatimi ---------- */
   function chips(){
-    var h=D.people.map(function(p){return '<option value="'+p.id+'"'+(view===p.id?' selected':'')+'>'+esc(p.name)+'</option>'}).join('');
-    h+='<option value="total"'+(view==='total'?' selected':'')+'>Σ Totali</option><option value="__add">+ Person i ri…</option>';
-    $('selP').innerHTML=h;
+    var inT=view==='total',o='<option value="" disabled hidden'+(inT?' selected':'')+'>Personat ▾</option>';
+    D.people.forEach(function(p){o+='<option value="'+p.id+'"'+(!inT&&view===p.id?' selected':'')+'>'+esc(p.name)+'</option>'});
+    o+='<option value="__add">+ Person i ri…</option>';
+    $('selP').innerHTML=o;$('selP').className=inT?'':'act';
+    if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
+    var t='<option value="" disabled hidden'+(!inT?' selected':'')+'>Totalet ▾</option><option value="sum"'+(inT&&tv==='sum'?' selected':'')+'>Σ Shuma</option><option value="each"'+(inT&&tv==='each'?' selected':'')+'>Σ Të ndarë</option>';
+    D.people.forEach(function(p){t+='<option value="'+p.id+'"'+(inT&&tv===p.id?' selected':'')+'>Σ '+esc(p.name)+'</option>'});
+    $('selT').innerHTML=t;$('selT').className=inT?'act':'';
   }
   function render(){
     chips();
@@ -252,6 +260,7 @@ var FIREBASE_CONFIG = {
     h+='<button class="addm" data-nm="g1">+ Shto material te grupi 1</button>';
     h+='<h2 class="g">'+TITLES[1]+'</h2>'+sections(C[1],p)+'<button class="addm" data-nm="g2">+ Shto material te grupi 2</button>';
     h+='<h2 class="g">'+TITLES[2]+'</h2>'+sections(C[2],p)+'<button class="addm" data-nm="g3">+ Shto material te grupi 3</button>';
+    h+='<div class="pact"><button data-pr="1" style="flex-basis:100%">✎ Ndrysho emrin e personit</button><button class="dng" data-pz="1">Vendos gjithçka në zero</button>'+(D.people.length>1?'<button class="dng" data-pd="1">Fshi personin</button>':'')+'</div>';
     m.innerHTML=h;
   }
   function sections(G,p){
@@ -314,9 +323,7 @@ var FIREBASE_CONFIG = {
   }
   function renderTotal(){
     if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
-    var o='<option value="sum"'+(tv==='sum'?' selected':'')+'>Shuma e të gjithëve</option><option value="each"'+(tv==='each'?' selected':'')+'>Të gjithë personat, të ndarë</option>';
-    D.people.forEach(function(p){o+='<option value="'+p.id+'"'+(tv===p.id?' selected':'')+'>'+esc(p.name)+'</option>'});
-    var h='<label style="font-size:13px;color:var(--mut)" for="selT">Shfaq listën:</label><select id="selT">'+o+'</select>';
+    var h='';
     if(tv==='sum')h+=totalHead('Totali (të gjithë)','all',1)+listHtml(collect(D.people));
     else if(tv==='each')D.people.forEach(function(p,i){h+=totalHead(p.name,p.id,i===0)+listHtml(collect([p]))});
     else{var p=find(tv);h+=totalHead(p.name,p.id,1)+listHtml(collect([p]))}
@@ -347,6 +354,15 @@ var FIREBASE_CONFIG = {
   }
   var main=$('main');
   main.addEventListener('click',function(e){
+    if(e.target.closest('[data-pr]')){var pr=cur();if(pr){var nn=prompt('Emri i personit:',pr.name);if(nn&&nn.trim()){pr.name=nn.trim();save();render()}}return}
+    if(e.target.closest('[data-pz]')){var pz=cur();if(pz&&confirm('Të vendos në zero të gjitha materialet e "'+pz.name+'"?')){pz.c={};pz.v={};save();render()}return}
+    if(e.target.closest('[data-pd]')){
+      var pd=cur();
+      if(pd&&D.people.length>1&&confirm('Të fshij personin "'+pd.name+'" me gjithë listën e tij?')){
+        D.people=D.people.filter(function(x){return x.id!==pd.id});view=D.people[0].id;D.act=view;save();render();window.scrollTo(0,0);
+      }
+      return;
+    }
     var ex=e.target.closest('[data-exp]');
     if(ex){var q=ex.getAttribute('data-exp').split('|');doExport(q[0]==='all'?null:find(q[0]),q[1]);return}
     var dx=e.target.closest('[data-dx]');
@@ -387,12 +403,15 @@ var FIREBASE_CONFIG = {
     var p=newPerson(nm);D.people.push(p);D.act=p.id;view=p.id;save();return true;
   }
   $('selP').addEventListener('change',function(){
-    var v=this.value;
+    var v=this.value;if(!v)return;
     if(v==='__add'){addPerson();render();window.scrollTo(0,0);return}
-    view=v;if(v!=='total'){D.act=v;save()}
+    view=v;D.act=v;save();
     render();window.scrollTo(0,0);
   });
-  main.addEventListener('change',function(e){if(e.target.id==='selT'){tv=e.target.value;render()}});
+  $('selT').addEventListener('change',function(){
+    if(!this.value)return;
+    tv=this.value;view='total';render();window.scrollTo(0,0);
+  });
 
   /* menyja */
   function closeSheet(){$('sheet').style.display='none';$('scrim').style.display='none'}
@@ -401,8 +420,7 @@ var FIREBASE_CONFIG = {
     h+='<div class="two"><button data-a="pdf">Shkarko PDF</button><button data-a="jpg">Shkarko JPEG</button></div><div style="height:6px"></div>';
     h+='<button data-a="copy">Kopjo listën si tekst</button>';
     if(navigator.share)h+='<button data-a="share">Ndaj listën (WhatsApp, mesazh…)</button>';
-    if(p){h+='<button data-a="ren">Ndrysho emrin</button><button data-a="zero" class="dng">Vendos gjithçka në zero</button>';
-      if(D.people.length>1)h+='<button data-a="del" class="dng">Fshi personin</button>'}
+    if(p)h+='<button data-a="ren">Ndrysho emrin e personit</button>';
     h+='<button data-a="mp">Menaxho personat (ndrysho emrin, fshi)</button><button data-a="mm">Menaxho materialet (fshih, shfaq, fshi)</button>';
     h+='<button data-a="sync">Sinkronizim (cloud)</button>';
     h+='<button data-a="bak">Ruaj kopje rezervë (skedar)</button><button data-a="res">Rikthe nga kopja rezervë</button>';
