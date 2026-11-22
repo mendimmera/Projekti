@@ -247,8 +247,8 @@ var FIREBASE_CONFIG = {
     D.people.forEach(function(p){o+='<option value="'+p.id+'"'+(!inT&&view===p.id?' selected':'')+'>'+esc(p.name)+'</option>'});
     o+='<option value="__add">+ Person i ri…</option>';
     $('selP').innerHTML=o;$('selP').className=inT?'':'act';
-    if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
-    var t='<option value="" disabled hidden'+(!inT?' selected':'')+'>Totalet ▾</option><option value="sum"'+(inT&&tv==='sum'?' selected':'')+'>Σ Shuma</option><option value="each"'+(inT&&tv==='each'?' selected':'')+'>Σ Të ndarë</option>';
+    if(!find(tv))tv=D.people[0].id;
+    var t='<option value="" disabled hidden'+(!inT?' selected':'')+'>Totalet ▾</option>';
     D.people.forEach(function(p){t+='<option value="'+p.id+'"'+(inT&&tv===p.id?' selected':'')+'>Σ '+esc(p.name)+'</option>'});
     $('selT').innerHTML=t;$('selT').className=inT?'act':'';
   }

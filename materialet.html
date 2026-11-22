@@ -238,8 +238,8 @@ var FIREBASE_CONFIG = {
     D.people.forEach(function(p){o+='<option value="'+p.id+'"'+(!inT&&view===p.id?' selected':'')+'>'+esc(p.name)+'</option>'});
     o+='<option value="__add">+ Person i ri…</option>';
     $('selP').innerHTML=o;$('selP').className=inT?'':'act';
-    if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
-    var t='<option value="" disabled hidden'+(!inT?' selected':'')+'>Totalet ▾</option><option value="sum"'+(inT&&tv==='sum'?' selected':'')+'>Σ Shuma</option><option value="each"'+(inT&&tv==='each'?' selected':'')+'>Σ Të ndarë</option>';
+    if(!find(tv))tv=D.people[0].id;
+    var t='<option value="" disabled hidden'+(!inT?' selected':'')+'>Totalet ▾</option>';
     D.people.forEach(function(p){t+='<option value="'+p.id+'"'+(inT&&tv===p.id?' selected':'')+'>Σ '+esc(p.name)+'</option>'});
     $('selT').innerHTML=t;$('selT').className=inT?'act':'';
   }
@@ -322,7 +322,7 @@ var FIREBASE_CONFIG = {
     return '<div class="ph" style="'+(first?'margin-top:12px':'margin-top:18px;padding-top:8px;border-top:2px solid var(--bd)')+'"><h2>'+esc(name)+'</h2><button data-exp="'+id+'|pdf">PDF</button><button data-exp="'+id+'|jpg">JPEG</button></div>';
   }
   function renderTotal(){
-    if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
+    if(!find(tv))tv=D.people[0].id;
     var h='';
     if(tv==='sum')h+=totalHead('Totali (të gjithë)','all',1)+listHtml(collect(D.people));
     else if(tv==='each')D.people.forEach(function(p,i){h+=totalHead(p.name,p.id,i===0)+listHtml(collect([p]))});
