@@ -12,8 +12,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Materialet">
 <style>
-:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e66a00;--pri:#1a6ef0;--sup:#8a3ffc;--danger:#d23b3b;--ok:#1f9d55}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--pri:#5b9bff;--sup:#b388ff;--danger:#ff6b6b}}
+:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--cel:#e66a00;--pri:#1a6ef0;--sup:#8a3ffc;--oth:#0f9d8a;--danger:#d23b3b;--ok:#1f9d55}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--pri:#5b9bff;--sup:#b388ff;--oth:#3ecfb8;--danger:#ff6b6b}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 body{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
@@ -25,8 +25,12 @@ button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
 .bar h1{flex:1;margin:0;font-size:16px}
 .bar a.back{text-decoration:none;color:var(--text);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;font-size:18px;line-height:1.2}
 .bar button{padding:6px 12px;font-size:18px;line-height:1.2}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:0 10px 8px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
+.chips{padding:0 10px 8px}
+select{width:100%;font:inherit;font-size:16px;font-weight:600;padding:9px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
+.mrow{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bd)}.mrow span{flex:1;min-width:0;font-size:15px}.mrow.off span{color:var(--mut);text-decoration:line-through}
+.sheet .mrow button{display:inline-block;width:auto;margin:0;padding:6px 10px;font-size:13px}
+.sheet h4{margin:12px 0 2px;font-size:13px;color:var(--mut)}
+.sheet{max-height:82%;overflow:auto}
 .chip{flex:none;border-radius:999px;padding:6px 14px;font-size:14px;white-space:nowrap}
 .chip.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
 .chip.add{border-style:dashed;color:var(--mut)}
@@ -48,7 +52,7 @@ h3{margin:14px 0 6px;font-size:15px;display:flex;align-items:center;gap:8px}
 .tile .tn.z{color:var(--mut);opacity:.5}
 .tile .mn{position:absolute;right:6px;top:6px;width:32px;height:32px;padding:0;border-radius:50%;font-size:20px;line-height:1;color:var(--mut)}
 .tile .mn:active{background:var(--bg)}
-.c-cel{--gc:var(--cel)}.c-pri{--gc:var(--pri)}.c-sup{--gc:var(--sup)}
+.c-oth{--gc:var(--oth)}.c-cel{--gc:var(--cel)}.c-pri{--gc:var(--pri)}.c-sup{--gc:var(--sup)}
 
 /* grupi 2 dhe 3: listë me numra */
 .list{background:var(--surf);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
@@ -65,6 +69,14 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
 .x{width:30px;height:30px;padding:0;border-radius:50%;color:var(--mut);flex:none;font-size:16px;line-height:1}
 .addv{display:block;width:100%;border:0;border-top:1px dashed var(--bd);border-radius:0;background:transparent;color:var(--acc);font-size:14px;padding:9px}
 
+button.addm{display:block;width:100%;margin-top:10px;border-style:dashed;color:var(--acc);font-size:14px}
+.tile .dx{position:absolute;right:6px;bottom:6px;width:26px;height:26px;padding:0;border-radius:50%;font-size:13px;line-height:1;color:var(--mut);border:0;background:transparent}
+.ph{display:flex;align-items:center;gap:8px;margin:22px 0 6px}
+.ph h2{flex:1;margin:0;font-size:17px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ph button{padding:6px 12px;font-size:14px;font-weight:600;color:var(--acc)}
+.seg{display:flex;gap:6px;margin:6px 0 10px}.seg button{flex:1;text-align:center;margin:0}.seg button.on{border:2px solid var(--acc);font-weight:700;padding:9px 11px}
+.sheet input.nm{width:100%;font:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
+.sheet .two{display:flex;gap:8px}.sheet .two button{text-align:center;margin:0}
 /* totali */
 .sum .row{min-height:44px}
 .sum b{font-variant-numeric:tabular-nums;font-size:17px}
@@ -85,10 +97,10 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
 <div class="top">
   <div class="bar">
     <a class="back" href="index.html" aria-label="Kreu">‹</a>
-    <h1>Materialet</h1>
+    <h1>Materialet <small id="st" style="font-weight:400;color:var(--mut);font-size:12px"></small></h1>
     <button id="bMenu" aria-label="Menyja">⋯</button>
   </div>
-  <div class="chips" id="chips"></div>
+  <div class="chips"><select id="selP" aria-label="Personi"></select></div>
 </div>
 <main id="main"></main>
 
@@ -97,6 +109,17 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
 <div id="toast"></div>
 <input type="file" id="file" accept="application/json,.json" hidden>
 
+<script>
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBzKNso8S23CyUCliXJH4JhlHgogeQ1Qx0",
+  authDomain: "kutite-elektrike.firebaseapp.com",
+  projectId: "kutite-elektrike",
+  storageBucket: "kutite-elektrike.firebasestorage.app",
+  messagingSenderId: "870521174345",
+  appId: "1:870521174345:web:f82182c38aba572c564298",
+  measurementId: "G-QS6BDM2KW8"
+};
+</script>
 <script>
 (function(){
   var $=function(i){return document.getElementById(i)};
@@ -132,48 +155,101 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
   var TITLES=['Grupi 1 · çelësa dhe priza','Grupi 2 · automatë, klema, tela','Grupi 3 · tuba dhe kuti'];
 
   /* ---------- gjendja ---------- */
-  var D={people:[],act:''};
+  var D={people:[],act:'',custom:{g1:[],g2:[],g3:[]},hidden:{}};
+  var tv='sum';/* çfarë shfaqet te Totali: 'sum', 'each' ose id personi */
   var view='';/* id e personit ose 'total' */
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
   function newPerson(name){return {id:uid(),name:name,c:{},v:{}}}
-  function load(){
-    try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Array.isArray(s.people))D=s}catch(e){}
+  function norm(){
+    D.hidden=D.hidden||{};D.custom=D.custom||{};['g1','g2','g3'].forEach(function(g){if(!Array.isArray(D.custom[g]))D.custom[g]=[]});
+    if(!Array.isArray(D.people))D.people=[];
     if(!D.people.length){D.people.push(newPerson('Personi 1'));D.act=D.people[0].id}
     D.people.forEach(function(p){p.c=p.c||{};p.v=p.v||{}});
     if(!find(D.act))D.act=D.people[0].id;
-    view=D.act;
+    D.updated=D.updated||0;
+  }
+  /* ruajtja lokale: IndexedDB (si te faqja Kutitë), me kujtesë të përkohshme nëse nuk punon */
+  var db=null,mem=false;
+  function openDB(cb){
+    try{
+      var r=indexedDB.open('materialet',1);
+      r.onupgradeneeded=function(){r.result.createObjectStore('k')};
+      r.onsuccess=function(){db=r.result;cb()};
+      r.onerror=function(){mem=true;cb()};
+    }catch(e){mem=true;cb()}
+  }
+  function idbPut(){
+    if(!db){if(mem&&!saveFail){saveFail=true;toast('Ruajtja në këtë shfletues nuk punon')}return}
+    try{db.transaction('k','readwrite').objectStore('k').put(D,'state')}catch(e){}
   }
   var saveFail=false;
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){if(!saveFail){saveFail=true;toast('Nuk mund të ruaj në këtë shfletues')}}}
+  function save(){D.updated=Date.now();idbPut();push()}
+  function load(cb){
+    function fin(){norm();view=D.act;cb()}
+    if(!db)return fin();
+    try{
+      var q=db.transaction('k').objectStore('k').get('state');
+      q.onsuccess=function(){
+        var v=q.result;
+        if(v&&Array.isArray(v.people))D=v;
+        else{/* kalo të dhënat e vjetra nga versioni i parë (localStorage) */
+          try{var o=JSON.parse(localStorage.getItem(KEY)||'null');if(o&&Array.isArray(o.people)){D=o;D.updated=Date.now()}}catch(e){}
+        }
+        fin();
+      };
+      q.onerror=fin;
+    }catch(e){fin()}
+  }
   function find(id){for(var i=0;i<D.people.length;i++)if(D.people[i].id===id)return D.people[i];return null}
   function cur(){return find(view)}
+  function target(){return view==='total'?(find(tv)||null):find(view)}/* personi i shfaqur, ose null = shuma e të gjithëve */
   function num(s){var n=parseFloat(String(s).replace(',','.'));return isFinite(n)&&n>0?Math.round(n*100)/100:0}
   function fmt(n){return String(Math.round(n*100)/100).replace('.',',')}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function vrows(p,k){var a=p.v[k];if(!a||!a.length){a=p.v[k]=[{v:'',n:0}]}return a}
 
+  /* katalogu: lista fikse + materialet e shtuara nga ti */
+  function cat(all){
+    var c=D.custom,H=D.hidden||{};
+    function keep(g,kf){
+      var o=[];
+      g.forEach(function(sec){
+        var it=sec.items.filter(function(x){return all||!H[kf(x)]});
+        if(it.length){var n={};for(var q in sec)n[q]=sec[q];n.items=it;o.push(n)}
+      });
+      return o;
+    }
+    var a=G1.slice(),b=G2.slice(),d=G3.slice();
+    if(c.g1.length)a.push({t:'Të shtuara',c:'c-oth',cu:1,items:c.g1.map(function(x){return [x.k,x.l]})});
+    if(c.g2.length)b.push({t:'Të shtuara',cu:1,items:c.g2.map(function(x){return {k:x.k,l:x.l,u:x.u,cu:1}})});
+    if(c.g3.length)d.push({t:'Të shtuara',cu:1,items:c.g3.map(function(x){return {k:x.k,l:x.l,u:x.u,cu:1}})});
+    var f1=function(x){return x[0]},f2=function(x){return x.k};
+    return [keep(a,f1),keep(b,f2),keep(d,f2)];
+  }
+
   /* ---------- vizatimi ---------- */
   function chips(){
-    var h=D.people.map(function(p){return '<button class="chip'+(view===p.id?' on':'')+'" data-p="'+p.id+'">'+esc(p.name)+'</button>'}).join('');
-    h+='<button class="chip'+(view==='total'?' on':'')+'" data-p="total">Totali</button><button class="chip add" id="bAdd">+ Person</button>';
-    $('chips').innerHTML=h;
-    var on=$('chips').querySelector('.on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
+    var h=D.people.map(function(p){return '<option value="'+p.id+'"'+(view===p.id?' selected':'')+'>'+esc(p.name)+'</option>'}).join('');
+    h+='<option value="total"'+(view==='total'?' selected':'')+'>Σ Totali</option><option value="__add">+ Person i ri…</option>';
+    $('selP').innerHTML=h;
   }
   function render(){
     chips();
     var m=$('main');
     if(view==='total'){m.innerHTML=renderTotal();return}
     var p=cur(),h='';
+    var C=cat();
     h+='<h2 class="g">'+TITLES[0]+'</h2><p class="hint">Prek një pllakë për +1. Butoni − heq një.</p>';
-    G1.forEach(function(g){
+    C[0].forEach(function(g){
       h+='<h3>'+g.t+'</h3><div class="tiles">';
       g.items.forEach(function(it){var n=p.c[it[0]]||0;
-        h+='<div class="tile '+g.c+(n?' on':'')+'" data-t="'+it[0]+'" role="button" tabindex="0"><span class="tl">'+esc(it[1])+'</span><span class="tn'+(n?'':' z')+'">'+fmt(n)+'</span><button class="mn" data-m="'+it[0]+'" aria-label="Hiq një">−</button></div>';
+        h+='<div class="tile '+g.c+(n?' on':'')+'" data-t="'+it[0]+'" role="button" tabindex="0"><span class="tl">'+esc(it[1])+'</span><span class="tn'+(n?'':' z')+'">'+fmt(n)+'</span><button class="mn" data-m="'+it[0]+'" aria-label="Hiq një">−</button>'+(g.cu?'<button class="dx" data-dx="'+it[0]+'" aria-label="Fshi materialin">✕</button>':'')+'</div>';
       });
       h+='</div>';
     });
-    h+='<h2 class="g">'+TITLES[1]+'</h2>'+sections(G2,p);
-    h+='<h2 class="g">'+TITLES[2]+'</h2>'+sections(G3,p);
+    h+='<button class="addm" data-nm="g1">+ Shto material te grupi 1</button>';
+    h+='<h2 class="g">'+TITLES[1]+'</h2>'+sections(C[1],p)+'<button class="addm" data-nm="g2">+ Shto material te grupi 2</button>';
+    h+='<h2 class="g">'+TITLES[2]+'</h2>'+sections(C[2],p)+'<button class="addm" data-nm="g3">+ Shto material te grupi 3</button>';
     m.innerHTML=h;
   }
   function sections(G,p){
@@ -190,8 +266,8 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
           h+='<button class="addv" data-add="'+it.k+'">+ '+it.pre+' me vlerë tjetër</button>';
         }else{
           var n=p.c[it.k]||0;
-          h+='<div class="row'+(n?' on':'')+'"><span class="rl">'+(it.dot?'<i class="dot" style="background:'+it.dot+'"></i>':'')+esc(it.dot?it.l:it.l)+'</span>'+
-            '<div class="u"><input data-k="'+it.k+'" type="text" inputmode="'+(it.u==='m'?'decimal':'numeric')+'" placeholder="0" value="'+(n?fmt(n):'')+'"><span>'+it.u+'</span></div></div>';
+          h+='<div class="row'+(n?' on':'')+'"><span class="rl">'+(it.dot?'<i class="dot" style="background:'+it.dot+'"></i>':'')+esc(it.l)+'</span>'+
+            '<div class="u"><input data-k="'+it.k+'" type="text" inputmode="'+(it.u==='m'?'decimal':'numeric')+'" placeholder="0" value="'+(n?fmt(n):'')+'"><span>'+it.u+'</span></div>'+(it.cu?'<button class="x" data-dx="'+it.k+'" aria-label="Fshi materialin">✕</button>':'')+'</div>';
         }
       });
       return h+'</div>';
@@ -201,16 +277,16 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
   /* ---------- listat e përmbledhura (për totalin dhe tekstin) ---------- */
   /* kthen [{grup, rreshta:[{l,n,u}]}] për një listë personash */
   function collect(people){
-    var out=[],acc={},vacc={};
+    var out=[],acc={},vacc={},C=cat();
     function add(k,n){if(n)acc[k]=(acc[k]||0)+n}
     people.forEach(function(p){
       Object.keys(p.c).forEach(function(k){add(k,p.c[k])});
       Object.keys(p.v).forEach(function(k){(p.v[k]||[]).forEach(function(r){if(!r.n)return;var key=k+'|'+String(r.v).trim();vacc[key]=(vacc[key]||0)+r.n})});
     });
     var g1=[];
-    G1.forEach(function(g){g.items.forEach(function(it){if(acc[it[0]])g1.push({l:it[2]||it[1],n:acc[it[0]],u:'copë'})})});
+    C[0].forEach(function(g){g.items.forEach(function(it){if(acc[it[0]])g1.push({l:it[2]||it[1],n:acc[it[0]],u:'copë'})})});
     out.push({t:TITLES[0],r:g1});
-    [[G2,TITLES[1]],[G3,TITLES[2]]].forEach(function(x){
+    [[C[1],TITLES[1]],[C[2],TITLES[2]]].forEach(function(x){
       var rr=[];
       x[0].forEach(function(g){g.items.forEach(function(it){
         if(it.vr){
@@ -223,18 +299,29 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
     });
     return out;
   }
-  function renderTotal(){
-    var data=collect(D.people),any=data.some(function(g){return g.r.length}),h='';
-    if(!any)return '<div class="empty">Ende nuk ka asnjë material të shënuar.</div>';
-    h+='<p class="hint">Shuma për '+D.people.length+' '+(D.people.length===1?'person':'persona')+'.</p>';
+  function listHtml(data){
+    var h='',any=false;
     data.forEach(function(g){
-      if(!g.r.length)return;
-      h+='<h2 class="g">'+g.t+'</h2><div class="list sum">'+g.r.map(function(r){return '<div class="row"><span class="rl">'+esc(r.l)+'</span><b>'+fmt(r.n)+'<span class="unit">'+r.u+'</span></b></div>'}).join('')+'</div>';
+      if(!g.r.length)return;any=true;
+      h+='<h3>'+g.t+'</h3><div class="list sum">'+g.r.map(function(r){return '<div class="row"><span class="rl">'+esc(r.l)+'</span><b>'+fmt(r.n)+'<span class="unit">'+r.u+'</span></b></div>'}).join('')+'</div>';
     });
+    return any?h:'<div class="empty">Asnjë material i shënuar.</div>';
+  }
+  function totalHead(name,id,first){
+    return '<div class="ph" style="'+(first?'margin-top:12px':'margin-top:34px;padding-top:14px;border-top:2px solid var(--bd)')+'"><h2>'+esc(name)+'</h2><button data-exp="'+id+'|pdf">PDF</button><button data-exp="'+id+'|jpg">JPEG</button></div>';
+  }
+  function renderTotal(){
+    if(tv!=='sum'&&tv!=='each'&&!find(tv))tv='sum';
+    var o='<option value="sum"'+(tv==='sum'?' selected':'')+'>Shuma e të gjithëve</option><option value="each"'+(tv==='each'?' selected':'')+'>Të gjithë personat, të ndarë</option>';
+    D.people.forEach(function(p){o+='<option value="'+p.id+'"'+(tv===p.id?' selected':'')+'>'+esc(p.name)+'</option>'});
+    var h='<label style="font-size:13px;color:var(--mut)" for="selT">Shfaq listën:</label><select id="selT">'+o+'</select>';
+    if(tv==='sum')h+=totalHead('Totali (të gjithë)','all',1)+listHtml(collect(D.people));
+    else if(tv==='each')D.people.forEach(function(p,i){h+=totalHead(p.name,p.id,i===0)+listHtml(collect([p]))});
+    else{var p=find(tv);h+=totalHead(p.name,p.id,1)+listHtml(collect([p]))}
     return h;
   }
   function asText(){
-    var p=view==='total'?null:cur(),data=collect(p?[p]:D.people);
+    var p=target(),data=collect(p?[p]:D.people);
     var t='Materialet — '+(p?p.name:'Totali ('+D.people.map(function(x){return x.name}).join(', ')+')')+'\n';
     var any=false;
     data.forEach(function(g){
@@ -258,6 +345,12 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
   }
   var main=$('main');
   main.addEventListener('click',function(e){
+    var ex=e.target.closest('[data-exp]');
+    if(ex){var q=ex.getAttribute('data-exp').split('|');doExport(q[0]==='all'?null:find(q[0]),q[1]);return}
+    var dx=e.target.closest('[data-dx]');
+    if(dx){e.stopPropagation();delCustom(dx.getAttribute('data-dx'));return}
+    var nb=e.target.closest('[data-nm]');
+    if(nb){addForm(nb.getAttribute('data-nm'));return}
     var m=e.target.closest('.mn');
     if(m){e.stopPropagation();bump(m.getAttribute('data-m'),-1);return}
     var t=e.target.closest('.tile');
@@ -286,27 +379,51 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
   });
   main.addEventListener('focusin',function(e){var el=e.target;if(el.tagName==='INPUT')setTimeout(function(){try{el.select()}catch(x){}},0)});
 
-  $('chips').addEventListener('click',function(e){
-    var c=e.target.closest('.chip');if(!c)return;
-    if(c.id==='bAdd'){
-      var nm=prompt('Emri i personit:','Personi '+(D.people.length+1));
-      if(nm===null)return;nm=nm.trim()||('Personi '+(D.people.length+1));
-      var p=newPerson(nm);D.people.push(p);D.act=p.id;view=p.id;save();render();window.scrollTo(0,0);return;
-    }
-    view=c.getAttribute('data-p');if(view!=='total'){D.act=view;save()}
+  function addPerson(){
+    var nm=prompt('Emri i personit:','Personi '+(D.people.length+1));
+    if(nm===null)return false;nm=nm.trim()||('Personi '+(D.people.length+1));
+    var p=newPerson(nm);D.people.push(p);D.act=p.id;view=p.id;save();return true;
+  }
+  $('selP').addEventListener('change',function(){
+    var v=this.value;
+    if(v==='__add'){addPerson();render();window.scrollTo(0,0);return}
+    view=v;if(v!=='total'){D.act=v;save()}
     render();window.scrollTo(0,0);
   });
+  main.addEventListener('change',function(e){if(e.target.id==='selT'){tv=e.target.value;render()}});
 
   /* menyja */
   function closeSheet(){$('sheet').style.display='none';$('scrim').style.display='none'}
   function openSheet(){
-    var p=cur(),h='<h2>'+(p?esc(p.name):'Totali')+'</h2>';
+    var p=cur(),tg=target(),h='<h2>'+(tg?esc(tg.name):'Totali')+'</h2>';
+    h+='<div class="two"><button data-a="pdf">Shkarko PDF</button><button data-a="jpg">Shkarko JPEG</button></div><div style="height:6px"></div>';
     h+='<button data-a="copy">Kopjo listën si tekst</button>';
     if(navigator.share)h+='<button data-a="share">Ndaj listën (WhatsApp, mesazh…)</button>';
     if(p){h+='<button data-a="ren">Ndrysho emrin</button><button data-a="zero" class="dng">Vendos gjithçka në zero</button>';
       if(D.people.length>1)h+='<button data-a="del" class="dng">Fshi personin</button>'}
+    h+='<button data-a="mp">Menaxho personat (ndrysho emrin, fshi)</button><button data-a="mm">Menaxho materialet (fshih, shfaq, fshi)</button>';
+    h+='<button data-a="sync">Sinkronizim (cloud)</button>';
     h+='<button data-a="bak">Ruaj kopje rezervë (skedar)</button><button data-a="res">Rikthe nga kopja rezervë</button>';
-    $('sheet').innerHTML=h;$('sheet').style.display='block';$('scrim').style.display='block';
+    showSheet(h);
+  }
+  function showSheet(h,keepScroll){var sh=$('sheet'),t=sh.scrollTop;sh.onclick=null;sh.innerHTML=h;sh.style.display='block';$('scrim').style.display='block';sh.scrollTop=keepScroll?t:0}
+  function mgrP(){
+    var h='<h2>Personat</h2>';
+    D.people.forEach(function(q){h+='<div class="mrow"><span>'+esc(q.name)+'</span><button data-a="pren" data-id="'+q.id+'">Emri</button>'+(D.people.length>1?'<button class="dng" data-a="pdel" data-id="'+q.id+'">Fshi</button>':'')+'</div>'});
+    h+='<div style="height:8px"></div><button data-a="padd">+ Person i ri</button><button data-a="menu">‹ Mbrapa</button>';
+    showSheet(h);
+  }
+  function mgrM(keep){
+    var C=cat(true),H=D.hidden,h='<h2>Materialet</h2><p class="hint" style="margin:0 0 4px">"Fshih" e heq materialin nga listat, por numrat mbeten dhe mund ta shfaqësh prapë. "Fshi" heq përgjithmonë materialin e shtuar nga ti.</p>';
+    C.forEach(function(g,gi){
+      h+='<h4>'+TITLES[gi]+'</h4>';
+      g.forEach(function(sec){sec.items.forEach(function(it){
+        var k=Array.isArray(it)?it[0]:it.k,l=Array.isArray(it)?(it[2]||it[1]):(it.full||it.l||(it.pre+' _ '+it.post)),off=!!H[k];
+        h+='<div class="mrow'+(off?' off':'')+'"><span>'+esc(l)+'</span><button data-a="mh" data-k="'+k+'">'+(off?'Shfaq':'Fshih')+'</button>'+(sec.cu?'<button class="dng" data-a="mdel" data-k="'+k+'">Fshi</button>':'')+'</div>';
+      })});
+    });
+    h+='<div style="height:8px"></div><button data-a="menu">‹ Mbrapa</button>';
+    showSheet(h,keep);
   }
   $('bMenu').onclick=openSheet;$('scrim').onclick=closeSheet;
   function copyText(t){
@@ -315,8 +432,29 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
     function fb(){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Lista u kopjua')}catch(e){toast('Nuk u kopjua')}document.body.removeChild(ta)}
   }
   $('sheet').addEventListener('click',function(e){
-    var b=e.target.closest('button');if(!b)return;
-    var a=b.getAttribute('data-a'),p=cur();closeSheet();
+    var b=e.target.closest('button');if(!b||!b.getAttribute('data-a'))return;
+    var a=b.getAttribute('data-a'),p=cur(),tg=target();
+    if(a==='menu'){openSheet();return}
+    if(a==='sync'){syncSheet();return}
+    if(a==='cin'){authGo('in');return}
+    if(a==='cres'){authGo('res');return}
+    if(a==='cout'){firebase.auth().signOut();closeSheet();return}
+    if(a==='cpull'){if(confirm('Të zëvendësoj të dhënat në këtë pajisje me ato nga cloud?')){closeSheet();pull(true)}return}
+    if(a==='mp'){mgrP();return}
+    if(a==='mm'){mgrM();return}
+    if(a==='pren'){var q=find(b.getAttribute('data-id')),nn=prompt('Emri i personit:',q.name);if(nn&&nn.trim()){q.name=nn.trim();save();render();mgrP()}return}
+    if(a==='pdel'){
+      var q2=find(b.getAttribute('data-id'));
+      if(D.people.length>1&&confirm('Të fshij personin "'+q2.name+'" me gjithë listën e tij?')){
+        D.people=D.people.filter(function(x){return x.id!==q2.id});if(!find(view)&&view!=='total')view=D.people[0].id;if(!find(D.act))D.act=D.people[0].id;save();render();mgrP();
+      }
+      return;
+    }
+    if(a==='padd'){if(addPerson()){render();mgrP()}return}
+    if(a==='mh'){var k=b.getAttribute('data-k');if(D.hidden[k])delete D.hidden[k];else D.hidden[k]=1;save();render();mgrM(1);return}
+    if(a==='mdel'){delCustom(b.getAttribute('data-k'));mgrM(1);return}
+    closeSheet();
+    if(a==='pdf'||a==='jpg'){doExport(tg,a);return}
     if(a==='copy'||a==='share'){
       var t=asText();if(!t){toast('Nuk ka asgjë të shënuar');return}
       if(a==='copy')copyText(t);else navigator.share({text:t}).catch(function(){});
@@ -341,13 +479,187 @@ input.vi{width:54px;font:inherit;font-size:15px;font-weight:600;text-align:cente
       try{
         var s=JSON.parse(r.result);if(!s||!Array.isArray(s.people)||!s.people.length)throw 0;
         if(!confirm('Kjo zëvendëson të gjitha të dhënat aktuale. Vazhdoj?'))return;
-        D=s;D.people.forEach(function(p){p.c=p.c||{};p.v=p.v||{}});if(!find(D.act))D.act=D.people[0].id;view=D.act;save();render();toast('U rikthye');
+        D=s;norm();view=D.act;save();render();toast('U rikthye');
       }catch(x){toast('Skedari nuk është i vlefshëm')}
     };
     r.readAsText(f);
   };
 
-  load();render();
+  /* ---------- shto / fshi material ---------- */
+  function addForm(g){
+    var unit='copë',ttl={g1:'Material i ri (grupi 1)',g2:'Material i ri (grupi 2)',g3:'Material i ri (grupi 3)'}[g];
+    var h='<h2>'+ttl+'</h2><input class="nm" id="nmN" type="text" placeholder="Emri i materialit" autocomplete="off">';
+    if(g!=='g1')h+='<div class="seg"><button data-u="copë" class="on">copë</button><button data-u="m">metra</button></div>';
+    h+='<div style="height:8px"></div><button class="pri" id="nmOk" style="text-align:center">Shto</button><button id="nmNo" style="text-align:center">Anulo</button>';
+    var sh=$('sheet');sh.innerHTML=h;sh.style.display='block';$('scrim').style.display='block';
+    sh.onclick=function(e){
+      var u=e.target.closest('[data-u]');
+      if(u){unit=u.getAttribute('data-u');[].forEach.call(sh.querySelectorAll('[data-u]'),function(b){b.classList.toggle('on',b===u)});return}
+      if(e.target.id==='nmNo'){closeSheet();sh.onclick=null}
+      if(e.target.id==='nmOk')go();
+    };
+    $('nmN').onkeydown=function(e){if(e.key==='Enter')go()};
+    setTimeout(function(){$('nmN').focus()},50);
+    function go(){
+      var nm=$('nmN').value.trim();if(!nm){$('nmN').focus();return}
+      var it={k:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,4),l:nm};
+      if(g!=='g1')it.u=unit;
+      D.custom[g].push(it);save();closeSheet();sh.onclick=null;render();toast('U shtua: '+nm);
+    }
+  }
+  function delCustom(k){
+    var found=null;
+    ['g1','g2','g3'].forEach(function(g){D.custom[g].forEach(function(x){if(x.k===k)found=[g,x]})});
+    if(!found||!confirm('Të fshij materialin "'+found[1].l+'" nga lista (për të gjithë personat)?'))return;
+    D.custom[found[0]]=D.custom[found[0]].filter(function(x){return x.k!==k});
+    D.people.forEach(function(p){delete p.c[k]});save();render();
+  }
+
+  /* ---------- eksport: PDF / JPEG (pa biblioteka, punon edhe pa internet) ---------- */
+  var W=1240,PH=1754,M=90;
+  function layout(data,title,paged){
+    var pages=[[]],y=M,RH=58,GH=84;
+    function put(it,need){
+      if(paged&&y+(need||it.h)>PH-M&&pages[pages.length-1].length){pages.push([]);y=M}
+      it.y=y;pages[pages.length-1].push(it);y+=it.h;
+    }
+    put({k:'title',t:title,h:70});
+    put({k:'date',t:(function(d){return d.getDate()+' '+['janar','shkurt','mars','prill','maj','qershor','korrik','gusht','shtator','tetor','nëntor','dhjetor'][d.getMonth()]+' '+d.getFullYear()})(new Date()),h:70});
+    var any=false;
+    data.forEach(function(g){
+      if(!g.r.length)return;any=true;
+      put({k:'grp',t:g.t,h:GH},GH+RH);
+      g.r.forEach(function(r){put({k:'row',r:r,h:RH})});
+    });
+    if(!any)put({k:'none',t:'Nuk ka materiale të shënuar.',h:RH});
+    return {pages:pages,height:y+M};
+  }
+  function draw(pg,h,title){
+    var c=document.createElement('canvas');c.width=W;c.height=h;var x=c.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,W,h);x.textBaseline='alphabetic';
+    var F='system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
+    pg.forEach(function(it){
+      if(it.k==='title'){x.fillStyle='#111';x.font='700 46px '+F;x.textAlign='left';x.fillText(it.t,M,it.y+46)}
+      else if(it.k==='date'){x.fillStyle='#777';x.font='400 26px '+F;x.textAlign='left';x.fillText(it.t,M,it.y+14)}
+      else if(it.k==='grp'){x.fillStyle='#1a6ef0';x.font='700 28px '+F;x.textAlign='left';x.fillText(it.t.toUpperCase(),M,it.y+50);x.fillRect(M,it.y+62,W-2*M,3)}
+      else if(it.k==='none'){x.fillStyle='#777';x.font='400 30px '+F;x.textAlign='left';x.fillText(it.t,M,it.y+38)}
+      else{
+        x.fillStyle='#111';x.font='400 32px '+F;x.textAlign='left';x.fillText(it.r.l,M,it.y+38);
+        x.font='700 32px '+F;x.textAlign='right';x.fillText(fmt(it.r.n)+' '+it.r.u,W-M,it.y+38);
+        x.fillStyle='#e2e2de';x.fillRect(M,it.y+52,W-2*M,1);
+      }
+    });
+    return c;
+  }
+  function b64bytes(url){var b=atob(url.split(',')[1]),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+  function makePdf(canvases){
+    var parts=[],off=0,xr=[],enc=new TextEncoder();
+    function w(v){var b=typeof v==='string'?enc.encode(v):v;parts.push(b);off+=b.length}
+    function o(n){xr[n]=off;w(n+' 0 obj\n')}
+    var n=canvases.length,kids=[];for(var i=0;i<n;i++)kids.push((3+3*i)+' 0 R');
+    w('%PDF-1.4\n');
+    o(1);w('<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+    o(2);w('<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+n+' >>\nendobj\n');
+    canvases.forEach(function(c,i){
+      var jb=b64bytes(c.toDataURL('image/jpeg',0.92)),pn=3+3*i,cs='q 595 0 0 842 0 0 cm /Im0 Do Q';
+      o(pn);w('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 '+(pn+2)+' 0 R >> >> /Contents '+(pn+1)+' 0 R >>\nendobj\n');
+      o(pn+1);w('<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream\nendobj\n');
+      o(pn+2);w('<< /Type /XObject /Subtype /Image /Width '+c.width+' /Height '+c.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jb.length+' >>\nstream\n');w(jb);w('\nendstream\nendobj\n');
+    });
+    var total=3+3*n,xo=off,x='xref\n0 '+total+'\n0000000000 65535 f \n';
+    for(var k=1;k<total;k++)x+=('0000000000'+xr[k]).slice(-10)+' 00000 n \n';
+    w(x+'trailer\n<< /Size '+total+' /Root 1 0 R >>\nstartxref\n'+xo+'\n%%EOF');
+    return new Blob(parts,{type:'application/pdf'});
+  }
+  function saveBlob(blob,name){
+    var u=URL.createObjectURL(blob),l=document.createElement('a');
+    l.href=u;l.download=name;document.body.appendChild(l);l.click();document.body.removeChild(l);
+    setTimeout(function(){URL.revokeObjectURL(u)},4000);
+  }
+  function doExport(p,f){
+    var data=collect(p?[p]:D.people),title='Materialet — '+(p?p.name:'Totali');
+    var fn='Materialet-'+(p?p.name:'Totali').replace(/[^\w\u00C0-\u024F-]+/g,'_');
+    try{
+      if(f==='pdf'){
+        var L=layout(data,title,true),cs=L.pages.map(function(pg){return draw(pg,PH,title)});
+        saveBlob(makePdf(cs),fn+'.pdf');
+      }else{
+        var L2=layout(data,title,false),c=draw(L2.pages[0],L2.height,title);
+        c.toBlob(function(b){saveBlob(b,fn+'.jpg')},'image/jpeg',0.92);
+      }
+      toast(f==='pdf'?'PDF u përgatit…':'JPEG u përgatit…');
+    }catch(e){toast('Nuk u krijua skedari')}
+  }
+
+  /* ---------- sinkronizim Firebase (i njëjti llogari/projekt si faqja Kutitë) ---------- */
+  var user=null,fbReady=null,pt=null,busy=false;
+  function cfgOk(){return !!(window.FIREBASE_CONFIG&&FIREBASE_CONFIG.apiKey)}
+  function setSt(t){$('st').textContent=t}
+  function loadJs(u){return new Promise(function(res,rej){var e=document.createElement('script');e.src=u;e.onload=res;e.onerror=rej;document.head.appendChild(e)})}
+  function initFb(){
+    if(fbReady)return fbReady;
+    var v='https://www.gstatic.com/firebasejs/10.12.2/firebase-';
+    fbReady=loadJs(v+'app-compat.js').then(function(){return Promise.all([loadJs(v+'auth-compat.js'),loadJs(v+'firestore-compat.js')])}).then(function(){
+      firebase.initializeApp(FIREBASE_CONFIG);
+      return new Promise(function(res){
+        firebase.auth().onAuthStateChanged(function(u){user=u;res();if(u)pull();else setSt('· pa hyrë')});
+      });
+    }).catch(function(){fbReady=null;setSt('· pa lidhje me cloud')});
+    return fbReady;
+  }
+  /* dokumenti: users/{uid}/chunks/materialet (nën të njëjtin përdorues si Kutitë) */
+  function ref(){return firebase.firestore().collection('users').doc(user.uid).collection('chunks').doc('materialet')}
+  function push(){
+    if(!cfgOk()||!user)return;
+    clearTimeout(pt);setSt('· pa sinkronizuar');pt=setTimeout(doPush,1500);
+  }
+  function doPush(){
+    if(!cfgOk()||!user)return;
+    if(busy){pt=setTimeout(doPush,1500);return}
+    busy=true;setSt('· po dërgohet…');
+    var pay=JSON.stringify({people:D.people,custom:D.custom,hidden:D.hidden});
+    ref().set({d:pay,updated:D.updated}).then(function(){setSt('· u sinkronizua ✓')}).catch(function(){setSt('· gabim sinkronizimi')}).then(function(){busy=false});
+  }
+  function pull(force){
+    if(!cfgOk()||!user)return Promise.resolve();
+    setSt('· po kontrollohet…');
+    return ref().get().then(function(snap){
+      if(!snap.exists){if(D.updated)doPush();else setSt('· cloud bosh');return}
+      var r=snap.data(),ru=r.updated||0;
+      if(!(force===true||ru>D.updated)){if(ru<D.updated)doPush();else setSt('· u sinkronizua ✓');return}
+      var o=JSON.parse(r.d||'{}'),act=D.act;
+      D={people:o.people||[],custom:o.custom,hidden:o.hidden,act:act,updated:ru};
+      norm();if(view!=='total'&&!find(view))view=D.act;
+      idbPut();render();setSt('· u sinkronizua ✓');
+    }).catch(function(){setSt('· gabim sinkronizimi')});
+  }
+  function syncSheet(){
+    var h='<h2>Sinkronizim (cloud)</h2><p class="hint">Të njëjtën llogari si te faqja Kutitë. Materialet ruhen në cloud dhe shfaqen në çdo pajisje ku hyn.</p>';
+    if(!cfgOk())h+='<p class="hint">Firebase nuk është konfiguruar.</p>';
+    else if(user)h+='<p class="hint"><b>Hyrë si '+esc(user.email||'përdorues')+'</b></p><button data-a="cpull">Shkarko nga cloud</button><button class="dng" data-a="cout">Dil</button>';
+    else h+='<p class="hint">Nuk ke hyrë. Hyr me email dhe fjalëkalim.</p><input class="nm" id="uE" type="email" placeholder="Email" autocomplete="email" autocapitalize="off" inputmode="email"><div style="height:6px"></div><input class="nm" id="uP" type="password" placeholder="Fjalëkalimi" autocomplete="current-password"><div style="height:8px"></div><button class="pri" data-a="cin" style="text-align:center">Hyr</button><button data-a="cres">Harrova fjalëkalimin</button>';
+    h+='<button data-a="menu">‹ Mbrapa</button>';
+    showSheet(h);
+  }
+  function authMsg(x){
+    var m={'auth/invalid-email':'Email-i nuk është i vlefshëm.','auth/invalid-credential':'Email ose fjalëkalim i gabuar.','auth/wrong-password':'Fjalëkalim i gabuar.','auth/user-not-found':'Nuk ekziston llogari me këtë email.','auth/too-many-requests':'Shumë përpjekje. Provo pas pak.','auth/network-request-failed':'Nuk ka lidhje me internetin.'};
+    return m[x&&x.code]||('Gabim: '+(x&&x.code?x.code:x));
+  }
+  function authGo(kind){
+    var e=$('uE').value.trim(),pw=$('uP').value;
+    if(!e||(!pw&&kind!=='res')){alert('Shkruaj email-in'+(kind==='res'?'.':' dhe fjalëkalimin.'));return}
+    var go=function(){
+      if(!window.firebase){alert('Nuk ka lidhje me internetin.');return}
+      var a=firebase.auth(),pr=kind==='res'?a.sendPasswordResetEmail(e):a.signInWithEmailAndPassword(e,pw);
+      pr.then(function(){
+        if(kind==='res')alert('Të dërgova lidhjen për fjalëkalim të ri në email (shiko edhe te Spam).');else closeSheet();
+      }).catch(function(x){alert(authMsg(x))});
+    };
+    if(window.firebase&&firebase.apps&&firebase.apps.length)go();else initFb().then(go);
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)pull()});
+
+  openDB(function(){load(function(){render();if(cfgOk())initFb()})});
   if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 })();
 </script>
