@@ -1,7 +1,7 @@
 {
   "name": "Kutitë elektrike",
   "short_name": "Elektrike",
-  "description": "Shëno çelësat, prizat dhe tekstet mbi projektin elektrik.",
+  "description": "Kutitë elektrike dhe lista e materialeve.",
   "lang": "sq",
   "start_url": "./index.html",
   "scope": "./",
