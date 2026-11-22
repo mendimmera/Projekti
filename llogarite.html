@@ -158,7 +158,9 @@ var FIREBASE_CONFIG = {
   var view='';/* id e personit ose 'total' */
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
   function newRoom(name){return {id:uid(),name:name,c:{}}}
-  function newPerson(name){var r=newRoom('Ambienti 1');return {id:uid(),name:name,rooms:[r],ar:r.id}}
+  var ROOMS=['Kuzhina','Korridori','Dhoma e gjumit','Ambjenti jashtë'];
+  function defRooms(){return ROOMS.map(newRoom)}
+  function newPerson(name){var rs=defRooms();return {id:uid(),name:name,rooms:rs,ar:rs[0].id}}
   function roomOf(p,id){for(var i=0;i<p.rooms.length;i++)if(p.rooms[i].id===id)return p.rooms[i];return null}
   function curRoom(){var p=cur();return p?(roomOf(p,p.ar)||p.rooms[0]):null}
   function find(id){for(var i=0;i<D.people.length;i++)if(D.people[i].id===id)return D.people[i];return null}
@@ -170,7 +172,7 @@ var FIREBASE_CONFIG = {
     if(!Array.isArray(D.people))D.people=[];
     if(!D.people.length){D.people.push(newPerson('Personi 1'));D.act=D.people[0].id}
     D.people.forEach(function(p){
-      if(!Array.isArray(p.rooms)||!p.rooms.length){var r0=newRoom('Ambienti 1');r0.c=p.c||{};p.rooms=[r0]}/* migrim nga formati i vjetër */
+      if(!Array.isArray(p.rooms)||!p.rooms.length){p.rooms=defRooms();var oc=p.c||{};if(Object.keys(oc).some(function(k){return oc[k]>0})){var r0=newRoom('Ambienti 1');r0.c=oc;p.rooms.push(r0)}}/* migrim nga formati i vjetër */
       delete p.c;
       p.rooms.forEach(function(r){r.c=r.c||{};if(!r.id)r.id=uid();if(!r.name)r.name='Ambienti'});
       if(!roomOf(p,p.ar))p.ar=p.rooms[0].id;
