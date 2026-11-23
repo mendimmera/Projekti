@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ditët e punës</title>
+<meta name="theme-color" content="#1a6ef0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ditët">
+<style>
+:root{--bg:#f4f4f2;--surf:#fff;--text:#1c1c1a;--mut:#6b6b66;--bd:#d8d8d2;--acc:#1a6ef0;--danger:#d23b3b;--ok:#1f9d55}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--surf:#222220;--text:#f0f0ec;--mut:#a0a09a;--bd:#3a3a36;--acc:#5b9bff;--danger:#ff6b6b}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:var(--text);background:var(--surf);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+
+.top{position:sticky;top:0;z-index:10;background:var(--surf);border-bottom:1px solid var(--bd);padding-top:env(safe-area-inset-top,0px)}
+.bar{display:flex;align-items:center;gap:8px;padding:5px 8px}
+.bar h1{flex:1;margin:0;font-size:16px}
+.bar a.back{text-decoration:none;color:var(--text);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;font-size:18px;line-height:1.2}
+.bar button{padding:6px 12px;font-size:18px;line-height:1.2}
+.chips{display:flex;gap:6px;padding:0 8px 6px}
+.chips select,.chips button{flex:1;min-width:0;border-width:2px;border-color:var(--bd);font-size:16px;font-weight:600;padding:5px 8px;border-radius:10px;background:var(--bg);text-align:left}
+.chips button{text-align:center}
+.chips select.act,.chips button.act{border-color:var(--acc);color:var(--acc)}
+select{width:100%;font:inherit;color:var(--text)}
+
+main{max-width:640px;margin:0 auto;padding:6px 8px}
+h2.g{margin:16px 0 4px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.hint{font-size:12px;color:var(--mut);margin:0 0 4px}
+
+.form{background:var(--surf);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-top:6px}
+.form label{display:block;margin:8px 0 3px;font-size:13px;font-weight:600;color:var(--mut)}
+.form label:first-child{margin-top:0}
+.form input,.sheet input.nm{width:100%;font:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--text)}
+input:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.qk{display:flex;gap:6px;overflow-x:auto;padding:6px 0 2px;scrollbar-width:none}.qk::-webkit-scrollbar{display:none}
+.qk button{flex:none;border-radius:999px;padding:4px 12px;font-size:14px;white-space:nowrap}
+.form button.pri{display:block;width:100%;margin-top:12px;padding:11px;font-size:16px}
+
+.sumbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 8px;padding:8px 12px;background:var(--surf);border:1px solid var(--bd);border-left:4px solid var(--ok);border-radius:10px;font-size:14px}
+.sumbar b{font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mh{display:flex;justify-content:space-between;margin:14px 2px 4px;font-size:15px;font-weight:700;color:var(--acc)}
+.mh span{color:var(--mut);font-weight:400;font-size:13px}
+.list{background:var(--surf);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;padding:6px 10px;border-bottom:1px solid var(--bd);min-height:46px;cursor:pointer}
+.row:last-child{border-bottom:0}
+.row:active{background:var(--bg)}
+.dd{flex:none;width:52px;text-align:center;line-height:1.1}.dd b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.dd small{font-size:11px;color:var(--mut)}
+.rl{flex:1;min-width:0;font-size:15px;line-height:1.25;overflow-wrap:anywhere}
+.rl i{display:block;font-style:normal;font-size:12px;color:var(--mut)}
+.rl .nw{color:var(--mut)}
+.empty{color:var(--mut);text-align:center;padding:26px 10px}
+
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;z-index:31;max-height:86%;overflow:auto;background:var(--surf);border:1px solid var(--bd);border-bottom:0;border-radius:14px 14px 0 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:none;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
+.sheet h2{margin:0 0 8px;font-size:15px}
+.sheet button{display:block;width:100%;text-align:left;margin-bottom:6px;padding:11px 12px}
+.sheet button.dng{color:var(--danger)}
+.sheet label{display:block;margin:8px 0 3px;font-size:13px;font-weight:600;color:var(--mut)}
+.sheet .two{display:flex;gap:8px}.sheet .two button{text-align:center;margin:0}
+.mrow{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bd)}.mrow span{flex:1;min-width:0;font-size:15px}
+.sheet .mrow button{display:inline-block;width:auto;margin:0;padding:6px 10px;font-size:13px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:#1c1c1a;color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="bar">
+    <a class="back" href="index.html" aria-label="Kreu">‹</a>
+    <h1>Ditët e punës <small id="st" style="font-weight:400;color:var(--mut);font-size:12px"></small></h1>
+    <button id="bMenu" aria-label="Menyja">⋯</button>
+  </div>
+  <div class="chips"><button id="bAdd">+ Shëno ditën</button><select id="selL" aria-label="Lista sipas personit"></select></div>
+</div>
+<main id="main"></main>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"></div>
+<div id="toast"></div>
+<input type="file" id="file" accept="application/json,.json" hidden>
+
+<script>
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBzKNso8S23CyUCliXJH4JhlHgogeQ1Qx0",
+  authDomain: "kutite-elektrike.firebaseapp.com",
+  projectId: "kutite-elektrike",
+  storageBucket: "kutite-elektrike.firebasestorage.app",
+  messagingSenderId: "870521174345",
+  appId: "1:870521174345:web:f82182c38aba572c564298",
+  measurementId: "G-QS6BDM2KW8"
+};
+</script>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var MONTHS=['Janar','Shkurt','Mars','Prill','Maj','Qershor','Korrik','Gusht','Shtator','Tetor','Nëntor','Dhjetor'];
+  var WD=['e diel','e hënë','e martë','e mërkurë','e enjte','e premte','e shtunë'];
+
+  /* ---------- gjendja ---------- */
+  var D={entries:[],updated:0};
+  var view='add';/* 'add' = formulari, 'list' = lista e një personi */
+  var lp='';/* personi i listës */
+  var form={d:'',p:'',w:''};
+  function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function norm(){
+    if(!Array.isArray(D.entries))D.entries=[];
+    D.entries=D.entries.filter(function(e){return e&&e.d&&e.p});
+    D.entries.forEach(function(e){if(!e.id)e.id=uid();e.w=e.w||'';e.t=e.t||0});
+    D.updated=D.updated||0;
+  }
+  function pad(n){return (n<10?'0':'')+n}
+  function today(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
+  function parse(s){var a=String(s).split('-');return new Date(+a[0],+a[1]-1,+a[2])}
+  function dayName(s){return WD[parse(s).getDay()]}
+  function longDate(s){var d=parse(s);return dayName(s)+' '+d.getDate()+' '+MONTHS[d.getMonth()].toLowerCase()+' '+d.getFullYear()}
+  function same(a,b){return a.trim().toLowerCase()===b.trim().toLowerCase()}
+  function newer(a,b){return a.d<b.d?1:a.d>b.d?-1:(b.t||0)-(a.t||0)}/* data më e re së pari */
+
+  /* personat dhe llojet e punës nxirren nga ditët e shënuara */
+  function persons(){
+    var m={},o=[];
+    D.entries.slice().sort(newer).forEach(function(e){
+      var k=e.p.trim().toLowerCase();
+      if(!m[k]){m[k]={name:e.p.trim(),days:{}};o.push(m[k])}
+      m[k].days[e.d]=1;
+    });
+    o.forEach(function(x){x.n=Object.keys(x.days).length});
+    return o;/* e fundit e përdorur së pari */
+  }
+  function works(){
+    var seen={},o=[];
+    D.entries.slice().sort(newer).forEach(function(e){var w=e.w.trim(),k=w.toLowerCase();if(w&&!seen[k]){seen[k]=1;o.push(w)}});
+    return o;
+  }
+  function canon(name){var n=name.trim(),ps=persons();for(var i=0;i<ps.length;i++)if(same(ps[i].name,n))return ps[i].name;return n}
+  function forPerson(name){return D.entries.filter(function(e){return same(e.p,name)}).sort(newer)}
+
+  /* ---------- ruajtja lokale: IndexedDB ---------- */
+  var db=null,mem=false,saveFail=false;
+  function openDB(cb){
+    try{
+      var r=indexedDB.open('ditet',1);
+      r.onupgradeneeded=function(){r.result.createObjectStore('k')};
+      r.onsuccess=function(){db=r.result;cb()};
+      r.onerror=function(){mem=true;cb()};
+    }catch(e){mem=true;cb()}
+  }
+  function idbPut(){
+    if(!db){if(mem&&!saveFail){saveFail=true;toast('Ruajtja në këtë shfletues nuk punon')}return}
+    try{db.transaction('k','readwrite').objectStore('k').put(D,'state')}catch(e){}
+  }
+  function save(){D.updated=Date.now();idbPut();push()}
+  function load(cb){
+    function fin(){norm();cb()}
+    if(!db)return fin();
+    try{
+      var q=db.transaction('k').objectStore('k').get('state');
+      q.onsuccess=function(){var v=q.result;if(v&&Array.isArray(v.entries))D=v;fin()};
+      q.onerror=fin;
+    }catch(e){fin()}
+  }
+
+  /* ---------- vizatimi ---------- */
+  var tt;
+  function toast(m){var e=$('toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){e.classList.remove('show')},1800)}
+  function chips(){
+    var ps=persons().slice().sort(function(a,b){return a.name.localeCompare(b.name,'sq')});
+    var o='<option value="" disabled hidden'+(view==='list'?'':' selected')+'>Lista e personit ▾</option>';
+    if(!ps.length)o+='<option value="" disabled>(ende pa persona)</option>';
+    ps.forEach(function(p){o+='<option value="'+esc(p.name)+'"'+(view==='list'&&same(lp,p.name)?' selected':'')+'>'+esc(p.name)+' ('+p.n+')</option>'});
+    $('selL').innerHTML=o;$('selL').className=view==='list'?'act':'';
+    $('bAdd').className=view==='add'?'act':'';
+  }
+  function rowHtml(e,showDate,showPerson){
+    var d=parse(e.d);
+    return '<div class="row" data-e="'+e.id+'"><div class="dd">'+(showDate?'<b>'+d.getDate()+'</b><small>'+dayName(e.d)+'</small>':'')+'</div><span class="rl">'+(e.w?esc(e.w):'<span class="nw">(pa shënuar lloji i punës)</span>')+(showPerson?'<i>'+esc(e.p)+'</i>':'')+'</span></div>';
+  }
+  function render(){
+    chips();
+    if(view==='list'&&!persons().some(function(p){return same(p.name,lp)}))view='add';
+    $('selL').className=view==='list'?'act':'';$('bAdd').className=view==='add'?'act':'';
+    $('main').innerHTML=view==='list'?renderList():renderAdd();
+  }
+  function quick(arr,attr){
+    if(!arr.length)return '';
+    return '<div class="qk">'+arr.slice(0,10).map(function(x){return '<button type="button" '+attr+'="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div>';
+  }
+  function renderAdd(){
+    if(!form.d)form.d=today();
+    var ps=persons().map(function(p){return p.name}),ws=works();
+    var h='<div class="form"><label for="fD">Data</label><input id="fD" type="date" value="'+form.d+'">';
+    h+='<label for="fP">Personi ku punon</label><input class="nm" id="fP" type="text" list="dlP" placeholder="Emri i personit" autocomplete="off" value="'+esc(form.p)+'">'+quick(ps,'data-qp');
+    h+='<label for="fW">Lloji i punës</label><input class="nm" id="fW" type="text" list="dlW" placeholder="p.sh. Instalim kutish, Tela, Montim prizash" autocomplete="off" value="'+esc(form.w)+'">'+quick(ws,'data-qw');
+    h+='<datalist id="dlP">'+ps.map(function(x){return '<option value="'+esc(x)+'">'}).join('')+'</datalist><datalist id="dlW">'+ws.map(function(x){return '<option value="'+esc(x)+'">'}).join('')+'</datalist>';
+    h+='<button class="pri" id="bSave">Ruaj ditën</button></div>';
+    var rec=D.entries.slice().sort(newer).slice(0,10);
+    h+='<h2 class="g">Të fundit</h2>';
+    if(!rec.length)h+='<div class="empty">Ende nuk ke shënuar asnjë ditë.</div>';
+    else{
+      h+='<p class="hint">Prek një rresht për ta ndryshuar ose fshirë.</p><div class="list">';
+      rec.forEach(function(e,i){h+=rowHtml(e,i===0||rec[i-1].d!==e.d,true)});
+      h+='</div>';
+    }
+    return h;
+  }
+  function renderList(){
+    var es=forPerson(lp),days={};es.forEach(function(e){days[e.d]=1});
+    var name=es.length?es[0].p.trim():lp;
+    var h='<div class="sumbar"><span>'+esc(name)+' · ditë pune</span><b>'+Object.keys(days).length+'</b></div>';
+    var months=[];
+    es.forEach(function(e,i){
+      var k=e.d.slice(0,7),m=months.length?months[months.length-1]:null;
+      if(!m||m.k!==k){m={k:k,es:[],days:{}};months.push(m)}
+      m.es.push(e);m.days[e.d]=1;
+    });
+    months.forEach(function(m){
+      var d=parse(m.k+'-01'),n=Object.keys(m.days).length;
+      h+='<div class="mh">'+MONTHS[d.getMonth()]+' '+d.getFullYear()+'<span>'+n+(n===1?' ditë':' ditë')+'</span></div><div class="list">';
+      m.es.forEach(function(e,i){h+=rowHtml(e,i===0||m.es[i-1].d!==e.d,false)});
+      h+='</div>';
+    });
+    return h;
+  }
+  function asText(){
+    if(view!=='list')return null;
+    var es=forPerson(lp).reverse();if(!es.length)return null;
+    var days={};es.forEach(function(e){days[e.d]=1});
+    var t='Ditët e punës — '+es[0].p.trim()+' ('+Object.keys(days).length+' ditë)\n\n';
+    es.forEach(function(e){t+='- '+longDate(e.d)+(e.w?': '+e.w:'')+'\n'});
+    return t;
+  }
+
+  /* ---------- sheet ---------- */
+  function closeSheet(){$('sheet').style.display='none';$('scrim').style.display='none'}
+  function showSheet(h){var sh=$('sheet');sh.innerHTML=h;sh.style.display='block';$('scrim').style.display='block';sh.scrollTop=0}
+  $('scrim').onclick=closeSheet;
+
+  function openMenu(){
+    var h='<h2>Ditët e punës</h2>';
+    if(view==='list')h+='<button data-a="copy">Kopjo listën si tekst</button>'+(navigator.share?'<button data-a="share">Ndaj listën (WhatsApp, mesazh…)</button>':'');
+    h+='<button data-a="mp">Menaxho personat (ndrysho emrin, fshi)</button>';
+    h+='<button data-a="sync">Sinkronizim (cloud)</button>';
+    h+='<button data-a="bak">Ruaj kopje rezervë (skedar)</button><button data-a="res">Rikthe nga kopja rezervë</button>';
+    showSheet(h);
+  }
+  $('bMenu').onclick=openMenu;
+  function mgrP(){
+    var h='<h2>Personat</h2><p class="hint">Ndryshimi i emrit vlen për të gjitha ditët e atij personi. Fshirja heq të gjitha ditët e tij.</p>';
+    var ps=persons().slice().sort(function(a,b){return a.name.localeCompare(b.name,'sq')});
+    if(!ps.length)h+='<p class="hint">Ende pa persona.</p>';
+    ps.forEach(function(p){h+='<div class="mrow"><span>'+esc(p.name)+' <small style="color:var(--mut)">('+p.n+' ditë)</small></span><button data-a="pren" data-n="'+esc(p.name)+'">Emri</button><button class="dng" data-a="pdel" data-n="'+esc(p.name)+'">Fshi</button></div>'});
+    h+='<div style="height:8px"></div><button data-a="menu">‹ Mbrapa</button>';
+    showSheet(h);
+  }
+  function entryForm(e){
+    var h='<h2>Ndrysho ditën</h2><label for="eD">Data</label><input class="nm" id="eD" type="date" value="'+e.d+'">';
+    h+='<label for="eP">Personi</label><input class="nm" id="eP" type="text" list="dlP2" autocomplete="off" value="'+esc(e.p)+'"><datalist id="dlP2">'+persons().map(function(p){return '<option value="'+esc(p.name)+'">'}).join('')+'</datalist>';
+    h+='<label for="eW">Lloji i punës</label><input class="nm" id="eW" type="text" list="dlW" autocomplete="off" value="'+esc(e.w)+'">';
+    h+='<div style="height:8px"></div><button class="pri" data-a="esave" data-id="'+e.id+'" style="text-align:center">Ruaj</button>';
+    h+='<div class="two"><button data-a="menu0" style="text-align:center">Anulo</button><button class="dng" data-a="edel" data-id="'+e.id+'" style="text-align:center">Fshi ditën</button></div>';
+    showSheet(h);
+  }
+  function findE(id){for(var i=0;i<D.entries.length;i++)if(D.entries[i].id===id)return D.entries[i];return null}
+  function copyText(t){
+    if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(t).then(function(){toast('Lista u kopjua')},fb)}
+    fb();
+    function fb(){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Lista u kopjua')}catch(e){toast('Nuk u kopjua')}document.body.removeChild(ta)}
+  }
+  $('sheet').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b||!b.getAttribute('data-a'))return;
+    var a=b.getAttribute('data-a');
+    if(a==='menu'){openMenu();return}
+    if(a==='menu0'){closeSheet();return}
+    if(a==='mp'){mgrP();return}
+    if(a==='sync'){syncSheet();return}
+    if(a==='cin'){authGo('in');return}
+    if(a==='cres'){authGo('res');return}
+    if(a==='cout'){firebase.auth().signOut();closeSheet();return}
+    if(a==='cpull'){if(confirm('Të zëvendësoj të dhënat në këtë pajisje me ato nga cloud?')){closeSheet();pull(true)}return}
+    if(a==='pren'){
+      var old=b.getAttribute('data-n'),nn=prompt('Emri i personit:',old);
+      if(nn&&nn.trim()){
+        nn=canon(nn);
+        D.entries.forEach(function(x){if(same(x.p,old))x.p=nn});
+        if(view==='list'&&same(lp,old))lp=nn;
+        save();render();mgrP();
+      }
+      return;
+    }
+    if(a==='pdel'){
+      var dn=b.getAttribute('data-n');
+      if(confirm('Të fshij personin "'+dn+'" me të gjitha ditët e tij?')){
+        D.entries=D.entries.filter(function(x){return !same(x.p,dn)});save();render();mgrP();
+      }
+      return;
+    }
+    if(a==='esave'){
+      var en=findE(b.getAttribute('data-id'));if(!en)return;
+      var d=$('eD').value,p=$('eP').value.trim();
+      if(!d||!p){toast('Shkruaj datën dhe personin');return}
+      en.d=d;en.p=canon(p);en.w=$('eW').value.trim();save();closeSheet();render();toast('U ruajt');return;
+    }
+    if(a==='edel'){
+      if(confirm('Të fshij këtë ditë?')){D.entries=D.entries.filter(function(x){return x.id!==b.getAttribute('data-id')});save();closeSheet();render()}
+      return;
+    }
+    closeSheet();
+    if(a==='copy'||a==='share'){
+      var t=asText();if(!t){toast('Nuk ka asgjë për të kopjuar');return}
+      if(a==='copy')copyText(t);else navigator.share({text:t}).catch(function(){});
+    }else if(a==='bak'){
+      var blob=new Blob([JSON.stringify(D)],{type:'application/json'}),u=URL.createObjectURL(blob),l=document.createElement('a');
+      l.href=u;l.download='ditet-'+today()+'.json';document.body.appendChild(l);l.click();document.body.removeChild(l);
+      setTimeout(function(){URL.revokeObjectURL(u)},2000);
+    }else if(a==='res'){$('file').click()}
+  });
+  $('file').onchange=function(){
+    var f=this.files[0];this.value='';if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var s=JSON.parse(r.result);if(!s||!Array.isArray(s.entries))throw 0;
+        if(!confirm('Kjo zëvendëson të gjitha të dhënat aktuale. Vazhdoj?'))return;
+        D=s;norm();save();render();toast('U rikthye');
+      }catch(x){toast('Skedari nuk është i vlefshëm')}
+    };
+    r.readAsText(f);
+  };
+
+  /* ---------- ngjarjet e faqes ---------- */
+  var main=$('main');
+  main.addEventListener('input',function(e){
+    var id=e.target.id;
+    if(id==='fD')form.d=e.target.value;else if(id==='fP')form.p=e.target.value;else if(id==='fW')form.w=e.target.value;
+  });
+  main.addEventListener('click',function(e){
+    var q=e.target.closest('[data-qp],[data-qw]');
+    if(q){
+      if(q.hasAttribute('data-qp')){form.p=q.getAttribute('data-qp');$('fP').value=form.p}
+      else{form.w=q.getAttribute('data-qw');$('fW').value=form.w}
+      return;
+    }
+    if(e.target.closest('#bSave')){
+      var d=$('fD').value,p=$('fP').value.trim(),w=$('fW').value.trim();
+      if(!d){toast('Zgjidh datën');return}
+      if(!p){toast('Shkruaj personin ku punon');$('fP').focus();return}
+      D.entries.push({id:uid(),d:d,p:canon(p),w:w,t:Date.now()});
+      form={d:d,p:canon(p),w:''};
+      save();render();toast('U shënua: '+longDate(d));return;
+    }
+    var r=e.target.closest('.row');
+    if(r){var en=findE(r.getAttribute('data-e'));if(en)entryForm(en)}
+  });
+  $('bAdd').onclick=function(){view='add';render();window.scrollTo(0,0)};
+  $('selL').addEventListener('change',function(){
+    if(!this.value)return;
+    lp=this.value;view='list';render();window.scrollTo(0,0);
+  });
+
+  /* ---------- sinkronizim Firebase (i njëjti projekt/llogari si faqet e tjera) ---------- */
+  var user=null,fbReady=null,pt=null,busy=false;
+  function cfgOk(){return !!(window.FIREBASE_CONFIG&&FIREBASE_CONFIG.apiKey)}
+  function setSt(t){$('st').textContent=t}
+  function loadJs(u){return new Promise(function(res,rej){var e=document.createElement('script');e.src=u;e.onload=res;e.onerror=rej;document.head.appendChild(e)})}
+  function initFb(){
+    if(fbReady)return fbReady;
+    var v='https://www.gstatic.com/firebasejs/10.12.2/firebase-';
+    fbReady=loadJs(v+'app-compat.js').then(function(){return Promise.all([loadJs(v+'auth-compat.js'),loadJs(v+'firestore-compat.js')])}).then(function(){
+      firebase.initializeApp(FIREBASE_CONFIG);
+      return new Promise(function(res){
+        firebase.auth().onAuthStateChanged(function(u){user=u;res();if(u)pull();else setSt('· pa hyrë')});
+      });
+    }).catch(function(){fbReady=null;setSt('· pa lidhje me cloud')});
+    return fbReady;
+  }
+  function ref(){return firebase.firestore().collection('users').doc(user.uid).collection('chunks').doc('ditet')}
+  function push(){
+    if(!cfgOk()||!user)return;
+    clearTimeout(pt);setSt('· pa sinkronizuar');pt=setTimeout(doPush,1500);
+  }
+  function doPush(){
+    if(!cfgOk()||!user)return;
+    if(busy){pt=setTimeout(doPush,1500);return}
+    busy=true;setSt('· po dërgohet…');
+    ref().set({d:JSON.stringify({entries:D.entries}),updated:D.updated}).then(function(){setSt('· u sinkronizua ✓')}).catch(function(){setSt('· gabim sinkronizimi')}).then(function(){busy=false});
+  }
+  function pull(force){
+    if(!cfgOk()||!user)return Promise.resolve();
+    setSt('· po kontrollohet…');
+    return ref().get().then(function(snap){
+      if(!snap.exists){if(D.updated)doPush();else setSt('· cloud bosh');return}
+      var r=snap.data(),ru=r.updated||0;
+      if(!(force===true||ru>D.updated)){if(ru<D.updated)doPush();else setSt('· u sinkronizua ✓');return}
+      var o=JSON.parse(r.d||'{}');
+      D={entries:o.entries||[],updated:ru};
+      norm();idbPut();render();setSt('· u sinkronizua ✓');
+    }).catch(function(){setSt('· gabim sinkronizimi')});
+  }
+  function syncSheet(){
+    var h='<h2>Sinkronizim (cloud)</h2><p class="hint">Të njëjtën llogari si te faqet e tjera. Të dhënat ruhen në cloud dhe shfaqen në çdo pajisje ku hyn.</p>';
+    if(!cfgOk())h+='<p class="hint">Firebase nuk është konfiguruar.</p>';
+    else if(user)h+='<p class="hint"><b>Hyrë si '+esc(user.email||'përdorues')+'</b></p><button data-a="cpull">Shkarko nga cloud</button><button class="dng" data-a="cout">Dil</button>';
+    else h+='<p class="hint">Nuk ke hyrë. Hyr me email dhe fjalëkalim.</p><input class="nm" id="uE" type="email" placeholder="Email" autocomplete="email" autocapitalize="off" inputmode="email"><div style="height:6px"></div><input class="nm" id="uP" type="password" placeholder="Fjalëkalimi" autocomplete="current-password"><div style="height:8px"></div><button class="pri" data-a="cin" style="text-align:center">Hyr</button><button data-a="cres">Harrova fjalëkalimin</button>';
+    h+='<button data-a="menu">‹ Mbrapa</button>';
+    showSheet(h);
+  }
+  function authMsg(x){
+    var m={'auth/invalid-email':'Email-i nuk është i vlefshëm.','auth/invalid-credential':'Email ose fjalëkalim i gabuar.','auth/wrong-password':'Fjalëkalim i gabuar.','auth/user-not-found':'Nuk ekziston llogari me këtë email.','auth/too-many-requests':'Shumë përpjekje. Provo pas pak.','auth/network-request-failed':'Nuk ka lidhje me internetin.'};
+    return m[x&&x.code]||('Gabim: '+(x&&x.code?x.code:x));
+  }
+  function authGo(kind){
+    var e=$('uE').value.trim(),pw=$('uP').value;
+    if(!e||(!pw&&kind!=='res')){alert('Shkruaj email-in'+(kind==='res'?'.':' dhe fjalëkalimin.'));return}
+    var go=function(){
+      if(!window.firebase){alert('Nuk ka lidhje me internetin.');return}
+      var a=firebase.auth(),pr=kind==='res'?a.sendPasswordResetEmail(e):a.signInWithEmailAndPassword(e,pw);
+      pr.then(function(){
+        if(kind==='res')alert('Të dërgova lidhjen për fjalëkalim të ri në email (shiko edhe te Spam).');else closeSheet();
+      }).catch(function(x){alert(authMsg(x))});
+    };
+    if(window.firebase&&firebase.apps&&firebase.apps.length)go();else initFb().then(go);
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)pull()});
+
+  openDB(function(){load(function(){render();if(cfgOk())initFb()})});
+  if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+})();
+</script>
+</body>
+</html>

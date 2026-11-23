@@ -1,4 +1,4 @@
-var V='kutite-v26',FILES=['./','./index.html','./kutite.html','./materialet.html','./llogarite.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png'];
+var V='kutite-v27',FILES=['./','./index.html','./kutite.html','./materialet.html','./llogarite.html','./ditet.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(V).then(function(c){return c.addAll(FILES)}).then(function(){return self.skipWaiting()}));
 });
