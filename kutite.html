@@ -575,8 +575,9 @@ var FIREBASE_CONFIG = {
   /* ---------- list, plan menu ---------- */
   $('bList').onclick=function(){
     var h='';
-    if(!S.marks.length)h='<p style="color:var(--mut)">Ende s’ka kuti të shënuara.</p>';
+    if(!S.marks.some(function(m){return m.type!=='tekst'}))h='<p style="color:var(--mut)">Ende s’ka kuti të shënuara.</p>';
     S.marks.forEach(function(m,i){
+      if(m.type==='tekst')return;
       h+='<div class="item" data-i="'+i+'"><div class="mk t-'+m.type+'">'+sym(m.type)+(m.type==='tekst'?'':'<span class="n">'+num(m)+'</span>')+'</div><div><b>'+esc(full(m))+'</b><small>'+(fmt(m)||'pa përmasa')+(m.note?' — '+esc(m.note):'')+'</small></div></div>';
     });
     $('items').innerHTML=h;hideSheets();$('list').style.display='block';
@@ -628,8 +629,9 @@ var FIREBASE_CONFIG = {
     return new Blob([u],{type:'application/pdf'});
   }
   $('lSave').onclick=function(){
-    if(!S.marks.length){alert('Lista është bosh.');return}
-    var items=S.marks.map(function(m){
+    var lm=S.marks.filter(function(m){return m.type!=='tekst'});
+    if(!lm.length){alert('Lista është bosh.');return}
+    var items=lm.map(function(m){
       var d=fmt(m);return (m.type==='tekst'?'•':num(m)+'.')+' '+full(m)+(d?': '+d:'')+(m.note?' ('+m.note+')':'')
     });
     var u=URL.createObjectURL(mkPdf('Lista e kutive — '+(S.name||'Projekti'),items));
@@ -665,7 +667,7 @@ var FIREBASE_CONFIG = {
   /* ---------- imazhet: lista, riemërtim, fshirje ---------- */
   function imgsUI(){
     var h='';
-    A.plans.forEach(function(p){h+='<div class="item" data-id="'+p.id+'"><div style="flex:1;min-width:0"><b>'+esc(p.name)+(p.id===A.act?' ✓':'')+'</b><small>'+p.marks.length+' kuti</small></div><button class="ico" data-a="r">✎</button><button class="ico dng" data-a="d">🗑</button></div>'});
+    A.plans.forEach(function(p){h+='<div class="item" data-id="'+p.id+'"><div style="flex:1;min-width:0"><b>'+esc(p.name)+(p.id===A.act?' ✓':'')+'</b><small>'+p.marks.filter(function(m){return m.type!=='tekst'}).length+' kuti</small></div><button class="ico" data-a="r">✎</button><button class="ico dng" data-a="d">🗑</button></div>'});
     $('iList').innerHTML=h||'<p style="color:var(--mut)">Ende s’ka imazhe.</p>';
   }
   $('bImgs').onclick=function(){imgsUI();hideSheets();$('imgs').style.display='block'};
